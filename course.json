@@ -1,0 +1,427 @@
+{
+  "departments": [
+    {
+      "name": "BIT",
+      "short": "bit",
+      "semesters": {
+        "1": [
+          {"sn": 1, "code": "BIT101CO", "title": "Fundamentals of Information Technology", "cr": 3},
+          {"sn": 2, "code": "BIT102HS", "title": "Mathematics-I", "cr": 3},
+          {"sn": 3, "code": "BIT103HS", "title": "Technical Communication", "cr": 3},
+          {"sn": 4, "code": "BIT104HS", "title": "Society and Ethics in IT", "cr": 3},
+          {"sn": 5, "code": "BIT105CO", "title": "Computer Programming in C", "cr": 3},
+          {"sn": 6, "code": "BIT106CO", "title": "Project-I", "cr": 2}
+        ],
+        "2": [
+          {"sn": 1, "code": "BIT151HS", "title": "Mathematics-II", "cr": 3},
+          {"sn": 2, "code": "BIT152CO", "title": "Digital Logic", "cr": 3},
+          {"sn": 3, "code": "BIT153HS", "title": "Discrete Structure", "cr": 3},
+          {"sn": 4, "code": "BIT154CO", "title": "Object-Oriented Programming in C++", "cr": 3},
+          {"sn": 5, "code": "BIT155MS", "title": "Financial Management and Accounting", "cr": 3},
+          {"sn": 6, "code": "BIT156CO", "title": "Project-II", "cr": 2}
+        ]
+      },
+      "notes": "Semesters 3-8 not yet collected."
+    },
+    {
+      "name": "Architecture",
+      "short": "arch",
+      "semesters": {
+        "1": [
+          {"sn": 1, "code": "BAR1001", "title": "Building Material and Construction I", "cr": 4},
+          {"sn": 2, "code": "BAR1002", "title": "Architectural Drafting I", "cr": 3},
+          {"sn": 3, "code": "BAR1003", "title": "An Introduction to Architecture", "cr": 2},
+          {"sn": 4, "code": "BAR1006", "title": "Workshop-I (Model and Sculpture)", "cr": 2},
+          {"sn": 5, "code": "BAR1005", "title": "Art & Graphics-I", "cr": 2},
+          {"sn": 6, "code": "BAR1004", "title": "Basic Design-I", "cr": 5},
+          {"sn": 7, "code": "BSH1001", "title": "Mathematics I", "cr": 3}
+        ],
+        "2": [
+          {"sn": 1, "code": "BSH2006", "title": "Mathematics-II", "cr": 3},
+          {"sn": 2, "code": "BAR2007", "title": "Architectural Drafting-II", "cr": 3},
+          {"sn": 3, "code": "BAR2010", "title": "Arts & Graphics-II", "cr": 3},
+          {"sn": 4, "code": "BAR2011", "title": "Basic Design-II", "cr": 5},
+          {"sn": 5, "code": "BAR2007", "title": "Building Material & Construction-II", "cr": 4},
+          {"sn": 6, "code": "BAR2009", "title": "History of Nepalese Architecture", "cr": 3},
+          {"sn": 7, "code": "BAR2012", "title": "Workshop-II (Carpentry and Masonry)", "cr": 2}
+        ],
+        "3": [
+          {"sn": 1, "code": "BAR3013", "title": "Building Material and Construction-III", "cr": 4},
+          {"sn": 2, "code": "BAR3015", "title": "History of Eastern Architecture", "cr": 3},
+          {"sn": 3, "code": "BAR3014", "title": "Computer Aided Design & Drafting (CADD)", "cr": 2},
+          {"sn": 4, "code": "BAR3018", "title": "Design Studio-III", "cr": 5},
+          {"sn": 5, "code": "BAR3016", "title": "Building Science-I", "cr": 2},
+          {"sn": 6, "code": "BAR3017", "title": "Surveying & leveling", "cr": 3},
+          {"sn": 7, "code": "BCI3003", "title": "Applied Mechanics", "cr": 3}
+        ],
+        "4": [
+          {"sn": 1, "code": "BAR4019", "title": "Building Science-II", "cr": 2},
+          {"sn": 2, "code": "BAR4020", "title": "Building Material & Construction-IV", "cr": 4},
+          {"sn": 3, "code": "BAR4021", "title": "Building Service-I", "cr": 3},
+          {"sn": 4, "code": "BAR4022", "title": "History of Western Architecture", "cr": 3},
+          {"sn": 5, "code": "BAR4023", "title": "Design Studio-IV", "cr": 5},
+          {"sn": 6, "code": "BAR4024", "title": "Advanced Computer Graphics-I", "cr": 2},
+          {"sn": 7, "code": "BCI4006", "title": "Strength of Material", "cr": 3}
+        ],
+        "5": [
+          {"sn": 1, "code": "BAR5026", "title": "Sustainable Architecture", "cr": 2},
+          {"sn": 2, "code": "BSH5002", "title": "English for Technical Communication", "cr": 3},
+          {"sn": 3, "code": "BAR5025", "title": "Building Material and Construction-V", "cr": 4},
+          {"sn": 4, "code": "BAR5029", "title": "Building Science-III", "cr": 2},
+          {"sn": 5, "code": "BAR5028", "title": "Design Studio-V", "cr": 5},
+          {"sn": 6, "code": "BAR5027", "title": "Modern Architecture", "cr": 3},
+          {"sn": 7, "code": "BCI5023", "title": "Structure I", "cr": 3}
+        ],
+        "6": [
+          {"sn": 1, "code": "BAR6030", "title": "Working Drawings & Detailing", "cr": 3},
+          {"sn": 2, "code": "BAR6035", "title": "Building Services-II", "cr": 2},
+          {"sn": 3, "code": "BAR6031", "title": "Human Settlement Planning", "cr": 3},
+          {"sn": 4, "code": "BAR68", "title": "Elective-I: Vernacular Architecture", "cr": 3},
+          {"sn": 5, "code": "BAR68", "title": "Elective-I: Low Cost Housing", "cr": 3},
+          {"sn": 6, "code": "BAR6033", "title": "Design Studio-VI", "cr": 5},
+          {"sn": 7, "code": "BCI6028", "title": "Structure-II", "cr": 3},
+          {"sn": 8, "code": "BAR6032", "title": "Architecture Conservation", "cr": 2}
+        ],
+        "7": [
+          {"sn": 1, "code": "BAR7039", "title": "Urban Design", "cr": 3},
+          {"sn": 2, "code": "BAR7040", "title": "Specification & Quantity Surveying", "cr": 4},
+          {"sn": 3, "code": "BAR7036", "title": "Sociology & Architecture", "cr": 2},
+          {"sn": 4, "code": "BAR7038", "title": "Conservation Design Studio-VII", "cr": 5},
+          {"sn": 5, "code": "BCI7035", "title": "RCC Design", "cr": 3},
+          {"sn": 6, "code": "BAR7037", "title": "Built Environment Research", "cr": 2},
+          {"sn": 7, "code": "BAR78..", "title": "Elective-II: Interior Design", "cr": 3},
+          {"sn": 8, "code": "BAR78..", "title": "Elective-II: Landscape Design", "cr": 3}
+        ],
+        "8": [
+          {"sn": 1, "code": "BAR7041", "title": "Professional Training Practice (Practicum)", "cr": 10}
+        ],
+        "9": [
+          {"sn": 1, "code": "BCI9007", "title": "Construction Project Management", "cr": 4},
+          {"sn": 2, "code": "BAR9042", "title": "Disaster Resilient Architecture", "cr": 2},
+          {"sn": 3, "code": "BSH9001", "title": "Engineering Economics", "cr": 3},
+          {"sn": 4, "code": "BAR9043", "title": "Urban Design Studio-VIII", "cr": 5},
+          {"sn": 5, "code": "BAR9044", "title": "Thesis Proposal", "cr": 2},
+          {"sn": 6, "code": "BAR9045", "title": "Directed Studies and Seminar", "cr": 2},
+          {"sn": 7, "code": "BAR98..", "title": "Elective III", "cr": 3}
+        ],
+        "10": [
+          {"sn": 1, "code": "BEG0009", "title": "Engineering Professional Practice", "cr": 2},
+          {"sn": 2, "code": "BAR0046", "title": "Thesis", "cr": 10}
+        ]
+      }
+    },
+    {
+      "name": "Civil Engineering",
+      "short": "civil",
+      "semesters": {
+        "1": [
+          {"sn": 1, "code": "BSH1003", "title": "Chemistry", "cr": 3},
+          {"sn": 2, "code": "BSH1001", "title": "Mathematics I", "cr": 3},
+          {"sn": 3, "code": "BCI1001", "title": "Applied Mechanics-I (Statics)", "cr": 3},
+          {"sn": 4, "code": "BCI1002", "title": "Civil Engineering Materials", "cr": 3},
+          {"sn": 5, "code": "BEL1001", "title": "Basics Electrical Engineering", "cr": 2},
+          {"sn": 6, "code": "BME1001", "title": "Engineering Drawing-I", "cr": 3},
+          {"sn": 7, "code": "BME1002", "title": "Workshop Technology", "cr": 2}
+        ],
+        "2": [
+          {"sn": 1, "code": "BSH2005", "title": "Mathematics II", "cr": 3},
+          {"sn": 2, "code": "BSH2004", "title": "Physics", "cr": 4},
+          {"sn": 3, "code": "BCI2004", "title": "Applied Mechanics-II (Dynamics)", "cr": 3},
+          {"sn": 4, "code": "BCI2005", "title": "Building Technology", "cr": 3},
+          {"sn": 5, "code": "BME2006", "title": "Fundamental of Thermodynamics and Heat Transfer", "cr": 2},
+          {"sn": 6, "code": "BME2007", "title": "Engineering Drawing II", "cr": 3}
+        ],
+        "3": [
+          {"sn": 1, "code": "BEC3008", "title": "Basic Electronics Engineering", "cr": 2},
+          {"sn": 2, "code": "BCI3009", "title": "Engineering Geology", "cr": 3},
+          {"sn": 3, "code": "BCI3007", "title": "Fluid Mechanics", "cr": 3},
+          {"sn": 4, "code": "BSH3008", "title": "Mathematics-III", "cr": 3},
+          {"sn": 5, "code": "BCI3006", "title": "Strength of Materials", "cr": 3},
+          {"sn": 6, "code": "BCI3008", "title": "Survey-I", "cr": 3},
+          {"sn": 7, "code": "BCE3001", "title": "Computer Programming", "cr": 3}
+        ],
+        "4": [
+          {"sn": 1, "code": "BSH4011", "title": "Probability & Statistics", "cr": 3},
+          {"sn": 2, "code": "BCI4011", "title": "Survey-II", "cr": 3},
+          {"sn": 3, "code": "BCI4012", "title": "Hydraulics", "cr": 3},
+          {"sn": 4, "code": "BCI4013", "title": "Theory of Structure-I", "cr": 3},
+          {"sn": 5, "code": "BCI4014", "title": "Concrete Technology & Masonry Structures", "cr": 3},
+          {"sn": 6, "code": "BCI4015", "title": "Civil Engineering Drawing", "cr": 2},
+          {"sn": 7, "code": "BSH4002", "title": "English for Technical Communication", "cr": 3}
+        ],
+        "5": [
+          {"sn": 1, "code": "BCI5016", "title": "Soil Mechanics", "cr": 3},
+          {"sn": 2, "code": "BCI5017", "title": "Survey Camp", "cr": 2},
+          {"sn": 3, "code": "BCI5018", "title": "Theory of Structure-II", "cr": 3},
+          {"sn": 4, "code": "BCI5019", "title": "Water Supply Engineering", "cr": 3},
+          {"sn": 5, "code": "BCI5020", "title": "Transportation Engineering-I", "cr": 3},
+          {"sn": 6, "code": "BCI5021", "title": "Engineering Hydrology", "cr": 3},
+          {"sn": 7, "code": "BCI5022", "title": "Design of Steel & Timber Structure", "cr": 3}
+        ],
+        "6": [
+          {"sn": 1, "code": "BCE6013", "title": "Numerical Method", "cr": 3},
+          {"sn": 2, "code": "BCI6024", "title": "Foundation Engineering", "cr": 3},
+          {"sn": 3, "code": "BCI6025", "title": "Irrigation Engineering", "cr": 3},
+          {"sn": 4, "code": "BCI6026", "title": "Saintary Engineering", "cr": 3},
+          {"sn": 5, "code": "BCI6027", "title": "Transportation Engineering-II", "cr": 3},
+          {"sn": 6, "code": "BSH6001", "title": "Engineering Economics", "cr": 3}
+        ],
+        "7": [
+          {"sn": 1, "code": "BCI7031", "title": "Estimation and Valuation", "cr": 3},
+          {"sn": 2, "code": "BCI7029", "title": "Design of Reinforced Concrete Structures", "cr": 3},
+          {"sn": 3, "code": "BCI7030", "title": "Hydropower Engineering", "cr": 3},
+          {"sn": 4, "code": "BCI7032", "title": "Civil Engineering Project-I", "cr": 1},
+          {"sn": 5, "code": "BCI7034", "title": "Construction Project Management", "cr": 3},
+          {"sn": 6, "code": "BCI7033", "title": "Safety Engineering", "cr": 3},
+          {"sn": 7, "code": "BCI78..", "title": "Elective-I: Rock Engineering", "cr": 3},
+          {"sn": 8, "code": "BCI78..", "title": "Elective-I: Transportation Planning & Management", "cr": 3},
+          {"sn": 9, "code": "BCI78..", "title": "Elective-I: Earthquake Resistant Design", "cr": 3},
+          {"sn": 10, "code": "BCI78..", "title": "Elective-I: Ground Water Engineering", "cr": 3}
+        ],
+        "8": [
+          {"sn": 1, "code": "BCI8035", "title": "Civil Engineering Project II", "cr": 3},
+          {"sn": 2, "code": "BEG8009", "title": "Engineering Professional Practice", "cr": 2},
+          {"sn": 3, "code": "BCI88..", "title": "Elective-II: Traffic Safety", "cr": 3},
+          {"sn": 4, "code": "BCI88..", "title": "Elective-II: Advanced RCC", "cr": 3},
+          {"sn": 5, "code": "BCI88..", "title": "Elective-II: Environmental Impact Assessment", "cr": 3},
+          {"sn": 6, "code": "BCI88..", "title": "Elective-II: Rock Slope Engineering", "cr": 3},
+          {"sn": 7, "code": "BCI8036", "title": "Internship", "cr": 3}
+        ]
+      }
+    },
+    {
+      "name": "Computer Engineering",
+      "short": "comp",
+      "semesters": {
+        "1": [
+          {"sn": 1, "code": "BSH1001", "title": "Mathematics I", "cr": 3},
+          {"sn": 2, "code": "BSH1002", "title": "Physics", "cr": 4},
+          {"sn": 3, "code": "BSH1004", "title": "English for Technical communication", "cr": 3},
+          {"sn": 4, "code": "BCE1001", "title": "Computer Programming", "cr": 3},
+          {"sn": 5, "code": "BCE1002", "title": "Fundamental of Computing Technology", "cr": 3},
+          {"sn": 6, "code": "BME1001", "title": "Engineering Drawing I", "cr": 3},
+          {"sn": 7, "code": "BME1002", "title": "Workshop Technology", "cr": 2}
+        ],
+        "2": [
+          {"sn": 1, "code": "BSH2005", "title": "Mathematics-II", "cr": 3},
+          {"sn": 2, "code": "BSH2003", "title": "Chemistry", "cr": 3},
+          {"sn": 3, "code": "BCE2003", "title": "Object Oriented Programming with C++", "cr": 3},
+          {"sn": 4, "code": "BEC2003", "title": "Digital Logic", "cr": 3},
+          {"sn": 5, "code": "BEL2003", "title": "Basic Electrical Engineering", "cr": 3},
+          {"sn": 6, "code": "BCI2003", "title": "Applied Mechanics", "cr": 3}
+        ],
+        "3": [
+          {"sn": 1, "code": "BSH3008", "title": "Mathematics-III", "cr": 3},
+          {"sn": 2, "code": "BCE3007", "title": "Object Oriented Analysis and Design", "cr": 3},
+          {"sn": 3, "code": "BCE3008", "title": "Computer Graphics", "cr": 3},
+          {"sn": 4, "code": "BEC3007", "title": "Electronics Devices and Circuits", "cr": 3},
+          {"sn": 5, "code": "BCE3006", "title": "Data Structure & Algorithm", "cr": 3},
+          {"sn": 6, "code": "BSH3009", "title": "Applied Sociology", "cr": 2},
+          {"sn": 7, "code": "BCE3009", "title": "Project I", "cr": 3}
+        ],
+        "4": [
+          {"sn": 1, "code": "BCE4005", "title": "Database Management System", "cr": 3},
+          {"sn": 2, "code": "BCE4011", "title": "Python Programming", "cr": 3},
+          {"sn": 3, "code": "BCE4012", "title": "Discrete Structure", "cr": 3},
+          {"sn": 4, "code": "BEC4006", "title": "Microprocessor", "cr": 3},
+          {"sn": 5, "code": "BEC4009", "title": "Communication System", "cr": 3},
+          {"sn": 6, "code": "BSH4011", "title": "Probability & Statistics", "cr": 3}
+        ],
+        "5": [
+          {"sn": 1, "code": "BCE5014", "title": "Algorithm Analysis & Design", "cr": 3},
+          {"sn": 2, "code": "BCE5015", "title": "Computer Architecture & Design", "cr": 3},
+          {"sn": 3, "code": "BCE5013", "title": "Numerical Methods", "cr": 3},
+          {"sn": 4, "code": "BCE5016", "title": "Operating System", "cr": 3},
+          {"sn": 5, "code": "BSH5001", "title": "Engineering Economics", "cr": 3},
+          {"sn": 6, "code": "BSH5002", "title": "Research Methodology", "cr": 2},
+          {"sn": 7, "code": "BCE5017", "title": "Project-II", "cr": 3}
+        ],
+        "6": [
+          {"sn": 1, "code": "BCE6019", "title": "Artificial Intelligence", "cr": 3},
+          {"sn": 2, "code": "BCE6020", "title": "Computer Network", "cr": 3},
+          {"sn": 3, "code": "BCE6022", "title": "Theory of Computation", "cr": 3},
+          {"sn": 4, "code": "BCE6023", "title": "Internet of Things", "cr": 3},
+          {"sn": 5, "code": "BCE6021", "title": "Software Engineering", "cr": 3},
+          {"sn": 6, "code": "BCE6807", "title": "Elective-I: Unix Programming", "cr": 3},
+          {"sn": 7, "code": "BCE6800", "title": "Elective-I: Data Mining and Data Warehousing", "cr": 3},
+          {"sn": 8, "code": "BCE6802", "title": "Elective-I: Distributed System", "cr": 3},
+          {"sn": 9, "code": "BCE6803", "title": "Elective-I: High Performance Computing", "cr": 3},
+          {"sn": 10, "code": "BCE6804", "title": "Elective-I: Machine Learning", "cr": 3},
+          {"sn": 11, "code": "BCE6805", "title": "Elective-I: Cryptography and Network Security", "cr": 3},
+          {"sn": 12, "code": "BCE6806", "title": "Elective-I: Mobile and Sensor Computing", "cr": 3},
+          {"sn": 13, "code": "BCE6801", "title": "Elective-I: Multimedia Technology", "cr": 3}
+        ],
+        "7": [
+          {"sn": 1, "code": "BCE7024", "title": "Distributed & Cloud Computing", "cr": 3},
+          {"sn": 2, "code": "BCE7025", "title": "Information Technology & Project Management", "cr": 3},
+          {"sn": 3, "code": "BCE7026", "title": "Simulation & Modelling", "cr": 3},
+          {"sn": 4, "code": "BCE7809", "title": "Elective-II: Real Time Operating System", "cr": 3},
+          {"sn": 5, "code": "BCE7810", "title": "Elective-II: Compiler Design", "cr": 3},
+          {"sn": 6, "code": "BCE7811", "title": "Elective-II: Java Programming", "cr": 3},
+          {"sn": 7, "code": "BCE7812", "title": "Elective-II: Deep Learning", "cr": 3},
+          {"sn": 8, "code": "BCE7813", "title": "Elective-II: Business Intelligence", "cr": 3},
+          {"sn": 9, "code": "BCE7814", "title": "Elective-II: Human Computer Interaction", "cr": 3},
+          {"sn": 10, "code": "BCE7808", "title": "Elective-II: Big Data Technologies", "cr": 3},
+          {"sn": 11, "code": "BCE7815", "title": "Elective-III: Advanced Database Programming", "cr": 3},
+          {"sn": 12, "code": "BCE7816", "title": "Elective-III: Fault Tolerant System", "cr": 3},
+          {"sn": 13, "code": "BCE7817", "title": "Elective-III: Software Security", "cr": 3},
+          {"sn": 14, "code": "BCE7818", "title": "Elective-III: Web Security", "cr": 3},
+          {"sn": 15, "code": "BCE7820", "title": "Elective-III: Augmented and Virtual reality", "cr": 3},
+          {"sn": 16, "code": "BCE7819", "title": "Elective-III: Quantum Computing", "cr": 3},
+          {"sn": 17, "code": "BCE7821", "title": "Elective-III: GIS", "cr": 3},
+          {"sn": 18, "code": "BCE7027", "title": "Project-III (Part A)", "cr": 3}
+        ],
+        "8": [
+          {"sn": 1, "code": "BCE8028", "title": "Cyber Security", "cr": 3},
+          {"sn": 2, "code": "BEG8009", "title": "Engineering Professional Practice", "cr": 2},
+          {"sn": 3, "code": "BCE8822", "title": "Elective-IV: Data Science", "cr": 3},
+          {"sn": 4, "code": "BCE8823", "title": "Elective-IV: Next Generation Network", "cr": 3},
+          {"sn": 5, "code": "BCE8824", "title": "Elective-IV: Computational Cognitive Science", "cr": 3},
+          {"sn": 6, "code": "BCE8825", "title": "Elective-IV: Agile Software Development", "cr": 3},
+          {"sn": 7, "code": "BCE8826", "title": "Elective-IV: Block Chain", "cr": 3},
+          {"sn": 8, "code": "BCE8827", "title": "Elective-IV: Digital Solutions for Climate Change", "cr": 3},
+          {"sn": 9, "code": "BCE8828", "title": "Elective-IV: Automation and Robotics", "cr": 3},
+          {"sn": 10, "code": "BCE8028", "title": "Project-III (Part B)", "cr": 3},
+          {"sn": 11, "code": "BCE8029", "title": "Internship", "cr": 3}
+        ]
+      }
+    },
+    {
+      "name": "BCA-IT",
+      "short": "bca",
+      "semesters": {
+        "1": [
+          {"sn": 1, "code": "BCA104CO", "title": "Computer Programming in C", "cr": 3},
+          {"sn": 2, "code": "BCA101CO", "title": "Computer System Concepts", "cr": 3},
+          {"sn": 3, "code": "BCA105CO", "title": "Digital Logic", "cr": 3},
+          {"sn": 4, "code": "BCA102HS", "title": "Mathematics-I", "cr": 3},
+          {"sn": 5, "code": "BCA103HS", "title": "Technical English", "cr": 3},
+          {"sn": 6, "code": "BCA106CO", "title": "Computer Project-I", "cr": 2}
+        ],
+        "2": [
+          {"sn": 1, "code": "BCA156CO", "title": "Computer Project-II", "cr": 2},
+          {"sn": 2, "code": "BCA155HS", "title": "Sociology, Ethics and Emotional Intelligence", "cr": 3},
+          {"sn": 3, "code": "BCA152MS", "title": "Modern Business Practices", "cr": 3},
+          {"sn": 4, "code": "BCA151HS", "title": "Mathematics-II", "cr": 3},
+          {"sn": 5, "code": "BCA153CO", "title": "Microprocessor & Assembly language", "cr": 3},
+          {"sn": 6, "code": "BCA154CO", "title": "Object-Oriented Programming", "cr": 3}
+        ],
+        "3": [
+          {"sn": 1, "code": "BCA202CO", "title": "Computer Architecture", "cr": 3},
+          {"sn": 2, "code": "BCA206CO", "title": "Computer Project-III", "cr": 3},
+          {"sn": 3, "code": "BCA203CO", "title": "Data Structure & Algorithms", "cr": 3},
+          {"sn": 4, "code": "BCA201MS", "title": "Financial Accounting", "cr": 2},
+          {"sn": 5, "code": "BCA204CO", "title": "System Analysis & Design", "cr": 3},
+          {"sn": 6, "code": "BCA205CO", "title": "User Interface Design", "cr": 3}
+        ],
+        "4": [
+          {"sn": 1, "code": "BCA254CO", "title": "Computer Network", "cr": 3},
+          {"sn": 2, "code": "BCA256CO", "title": "Computer Project-IV", "cr": 3},
+          {"sn": 3, "code": "BCA255CO", "title": "Database Management System", "cr": 3},
+          {"sn": 4, "code": "BCA252CO", "title": "Numerical Methods", "cr": 3},
+          {"sn": 5, "code": "BCA253CO", "title": "Operating System", "cr": 3},
+          {"sn": 6, "code": "BCA251MS", "title": "Technology & Operations Management", "cr": 3}
+        ],
+        "5": [
+          {"sn": 1, "code": "BCA305CO", "title": "Computer Graphics", "cr": 3},
+          {"sn": 2, "code": "BCA306CO", "title": "Computer Project-V", "cr": 3},
+          {"sn": 3, "code": "BCA303CO", "title": "Object-Oriented Analysis & Design", "cr": 3},
+          {"sn": 4, "code": "BCA301HS", "title": "Probability & Statistics", "cr": 3},
+          {"sn": 5, "code": "BCA302CO", "title": "Management Information System", "cr": 3},
+          {"sn": 6, "code": "BCA304CO", "title": "Web Technology", "cr": 3}
+        ],
+        "6": [
+          {"sn": 1, "code": "BCA382CO", "title": "Artificial Intelligence", "cr": 3},
+          {"sn": 2, "code": "BCA381CO", "title": "Cloud Computing", "cr": 3},
+          {"sn": 3, "code": "BCA379CO", "title": "Computer Project-VI", "cr": 3},
+          {"sn": 4, "code": "BCA380CO", "title": "Network Programming", "cr": 3},
+          {"sn": 5, "code": "BCA377SH", "title": "Research Methodology", "cr": 2}
+        ],
+        "7": [
+          {"sn": 1, "code": "BCA413CO", "title": "Advanced Object-Oriented Programming", "cr": 3},
+          {"sn": 2, "code": "BCA414**", "title": "Elective-I", "cr": 3},
+          {"sn": 3, "code": "BCA412CO", "title": "Electronic Commerce", "cr": 3},
+          {"sn": 4, "code": "BCA415CO", "title": "Internship", "cr": 3},
+          {"sn": 5, "code": "BCA411CO", "title": "Software Project Management", "cr": 3}
+        ],
+        "8": [
+          {"sn": 1, "code": "BCA544CO", "title": "Apprentice Project", "cr": 6},
+          {"sn": 2, "code": "BCA453CO", "title": "Dot Net Programming", "cr": 3},
+          {"sn": 3, "code": "BCA451CO", "title": "e-Governance", "cr": 3},
+          {"sn": 4, "code": "BCA454**", "title": "Elective-II", "cr": 3},
+          {"sn": 5, "code": "BCA452CO", "title": "Multimedia Application", "cr": 3}
+        ]
+      }
+    },
+    {
+      "name": "Elx. & Comm. Engineering",
+      "short": "eca",
+      "semesters": {
+        "1": [
+          {"sn": 1, "code": "BSH1001", "title": "Mathametics I", "cr": 3},
+          {"sn": 2, "code": "BSH1004", "title": "Physics", "cr": 4},
+          {"sn": 3, "code": "BSH1002", "title": "English for Technical Communication", "cr": 3},
+          {"sn": 4, "code": "BCE1001", "title": "Computer Programming", "cr": 3},
+          {"sn": 5, "code": "BEC1001", "title": "Basic Electronics Engineering", "cr": 3},
+          {"sn": 6, "code": "BME1001", "title": "Engineering Drawing I", "cr": 3}
+        ],
+        "2": [
+          {"sn": 1, "code": "BSH2005", "title": "Mathematics II", "cr": 3},
+          {"sn": 2, "code": "BSH2003", "title": "Chemistry", "cr": 3},
+          {"sn": 3, "code": "BCE2003", "title": "Object Oriented Programming with C++", "cr": 3},
+          {"sn": 4, "code": "BEC2002", "title": "Digital Electronics", "cr": 3},
+          {"sn": 5, "code": "BEL2003", "title": "Basic Electrical Engineering", "cr": 3},
+          {"sn": 6, "code": "BME2005", "title": "CAD and Rapid Prototyping", "cr": 3}
+        ],
+        "3": [
+          {"sn": 1, "code": "BSH3008", "title": "Mathematics III", "cr": 3},
+          {"sn": 2, "code": "BEC3004", "title": "Electromagnetics", "cr": 3},
+          {"sn": 3, "code": "BEL3005", "title": "Network Analysis", "cr": 3},
+          {"sn": 4, "code": "BEC3005", "title": "Electronics Circuit", "cr": 3},
+          {"sn": 5, "code": "BEC3006", "title": "Microprocessor", "cr": 3},
+          {"sn": 6, "code": "BCE3005", "title": "Database Management System", "cr": 3}
+        ],
+        "4": [
+          {"sn": 1, "code": "BSH4010", "title": "Applied Mathematics", "cr": 3},
+          {"sn": 2, "code": "BEC4008", "title": "Integrated Digital Electronic", "cr": 3},
+          {"sn": 3, "code": "BEL4010", "title": "Control System", "cr": 3},
+          {"sn": 4, "code": "BCE4013", "title": "Numerical Methods", "cr": 3},
+          {"sn": 5, "code": "BEL4011", "title": "Power Electronics & Drives", "cr": 3},
+          {"sn": 6, "code": "BCE4010", "title": "Computer Architecture", "cr": 3}
+        ],
+        "5": [
+          {"sn": 1, "code": "BSH5011", "title": "Probability and Statistics", "cr": 3},
+          {"sn": 2, "code": "BEC5011", "title": "Embedded System & Robotics", "cr": 3},
+          {"sn": 3, "code": "BEC5012", "title": "Signals and Systems", "cr": 3},
+          {"sn": 4, "code": "BEC5013", "title": "Antennas & Propagation", "cr": 3},
+          {"sn": 5, "code": "BEL5009", "title": "Instrumentation", "cr": 3},
+          {"sn": 6, "code": "BEC5014", "title": "Communication System-I", "cr": 3}
+        ],
+        "6": [
+          {"sn": 1, "code": "BEC6016", "title": "Communication System II", "cr": 3},
+          {"sn": 2, "code": "BCE6020", "title": "Computer Networks", "cr": 3},
+          {"sn": 3, "code": "BEC6017", "title": "Filter Design", "cr": 3},
+          {"sn": 4, "code": "BSH6001", "title": "Engineering Economics", "cr": 3},
+          {"sn": 5, "code": "BEC6018", "title": "Industrial Automation & Drives", "cr": 3},
+          {"sn": 6, "code": "BSH6003", "title": "Project Management", "cr": 3},
+          {"sn": 7, "code": "BEC6019", "title": "Project I", "cr": 2}
+        ],
+        "7": [
+          {"sn": 1, "code": "BEC7025", "title": "Telecommunication Networks", "cr": 3},
+          {"sn": 2, "code": "BEC7026", "title": "Digital Signal Processing", "cr": 3},
+          {"sn": 3, "code": "BCE7027", "title": "Internet of Things", "cr": 3},
+          {"sn": 4, "code": "BEC78", "title": "Elective-I: Optical Fiber Communication", "cr": 3},
+          {"sn": 5, "code": "BEC78", "title": "Elective-II: Artificial Intelligence", "cr": 3},
+          {"sn": 6, "code": "BEC7028", "title": "Project-II (Part A)", "cr": 2}
+        ],
+        "8": [
+          {"sn": 1, "code": "BEC8030", "title": "Wireless Communication", "cr": 3},
+          {"sn": 2, "code": "BEG8009", "title": "Engineering Professional Practice", "cr": 2},
+          {"sn": 3, "code": "BEC88", "title": "Elective-III: Bio-Medical Instrumentation", "cr": 3},
+          {"sn": 4, "code": "BEC8031", "title": "Project-II (Part B)", "cr": 3},
+          {"sn": 5, "code": "BEC8032", "title": "Internship", "cr": 3}
+        ]
+      }
+    }
+  ]
+}
