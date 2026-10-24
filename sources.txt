@@ -1,0 +1,6 @@
+2026-10-24 https://khec.edu.np/course/view/?dept_id=1.html  # arch, sem 1-10
+2026-10-24 https://khec.edu.np/course/view/?dept_id=2.html  # civil, sem 1-8
+2026-10-24 https://khec.edu.np/course/view/?dept_id=3.html  # comp, sem 1-8
+2026-10-24 https://khec.edu.np/course/view/?dept_id=4.html  # eca, sem 1-8
+2026-10-24 https://khec.edu.np/course/view/?dept_id=14.html # bca, sem 1-8
+2026-10-24 https://khec.edu.np/course/view/?dept_id=15.html # bit, sem 1-2 only, 3-8 khali xa
