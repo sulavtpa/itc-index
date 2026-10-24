@@ -1,5 +1,7 @@
 """
-make_table.py - makes course table images from course.json
+this file generates table with course code, title and credit hour
+generates in .webp format
+webp was chosen as it is easily shareable and takes comparatively less space than png or jpg
 
 Usage:
     py make_table.py                          makes ALL tables
@@ -8,8 +10,11 @@ Usage:
 
 Images are saved like: courses/computer/1st-sem-comp.webp
 
-Install once:  py -m pip install pillow
-Font needed:   assets/OpenSans.ttf
+make sure there is pillow installed, if not run:
+
+py -m pip install pillow
+
+the file is formatted with extension named Ruff
 """
 
 import json
@@ -23,10 +28,8 @@ PADDING_X = 42
 ROW_HEIGHT = 135
 MARGIN = 45
 LINE_WIDTH = 3
-
 HEADER = ["SN", "COURSE CODE", "Title", "CR (Credit Hour)"]
 CENTERED_COLUMNS = [0, 3]
-
 FOLDER_NAMES = {
     "bit": "bit",
     "arch": "arch",
@@ -35,7 +38,6 @@ FOLDER_NAMES = {
     "bca": "bca-it",
     "eca": "elx",
 }
-
 SEMESTER_WORDS = {
     1: "1st",
     2: "2nd",
@@ -48,7 +50,6 @@ SEMESTER_WORDS = {
     9: "9th",
     10: "10th",
 }
-
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -76,19 +77,18 @@ def draw_table(courses):
     regular_font.set_variation_by_name("Regular")
     bold_font = ImageFont.truetype(font_path, FONT_SIZE)
     bold_font.set_variation_by_name("Bold")
-
     rows = [HEADER]
     for course in courses:
-        rows.append([
-            str(course["sn"]),
-            course["code"],
-            course["title"],
-            str(course["cr"]),
-        ])
-
+        rows.append(
+            [
+                str(course["sn"]),
+                course["code"],
+                course["title"],
+                str(course["cr"]),
+            ]
+        )
     measure_image = Image.new("RGB", (10, 10), "white")
     measure = ImageDraw.Draw(measure_image)
-
     column_widths = [0, 0, 0, 0]
     for row_number in range(len(rows)):
         font = bold_font if row_number == 0 else regular_font
@@ -188,7 +188,9 @@ def main():
     try:
         departments = read_course_file()
     except FileNotFoundError:
-        print("ERROR: course.json not found. Put it in the same folder as make_table.py")
+        print(
+            "ERROR: course.json not found. Put it in the same folder as make_table.py"
+        )
         return
     except json.JSONDecodeError as error:
         print("ERROR: course.json has a typo (missing comma or bracket?)")
@@ -206,7 +208,9 @@ def main():
 
     department = find_department(departments, arguments[0])
     if department is None:
-        print("ERROR: no department found for '" + arguments[0] + "'. Try one of these:")
+        print(
+            "ERROR: no department found for '" + arguments[0] + "'. Try one of these:"
+        )
         for item in departments:
             print("  " + item["name"] + "   (or: " + item["short"] + ")")
         return
