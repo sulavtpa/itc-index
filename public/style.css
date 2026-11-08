@@ -709,9 +709,10 @@ button {
 
 .site-footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 8px 16px;
   width: min(1080px, 100%);
   min-height: 64px;
   margin: 0 auto;
@@ -720,11 +721,38 @@ button {
   font-size: 13px;
 }
 
+.footer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-brand img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
     animation: none !important;
     transition-duration: .01ms !important;
+  }
+
+  /* decorative logo hover: keep it smooth even with reduced motion */
+  .folder,
+  .folder::after,
+  .folder .paper,
+  .folder .folder__front {
+    transition-duration: .3s !important;
   }
 }

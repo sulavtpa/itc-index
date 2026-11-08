@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """ITC Index contribution tool.
 
 Lets anyone add, modify or delete files in the repository without knowing git.
@@ -212,15 +212,15 @@ def tree_picker(select, title):
 
         sys.stdout.write("\x1b[2J\x1b[H")
         write(f"{BOLD}{ACCENT}{title}{RESET}")
-        write(f"{DIM}arrows move · ←→ collapse/expand · Enter select · "
-              f"Esc cancel · type to filter: “{filter_text}”{RESET}")
+        write(f"{DIM}arrows move Â· â†â†’ collapse/expand Â· Enter select Â· "
+              f"Esc cancel Â· type to filter: â€œ{filter_text}â€{RESET}")
         write("")
         for offset, row in enumerate(rows[scroll:scroll + VISIBILITY]):
             active = scroll + offset == cursor
             mark = f"{ACCENT}>{RESET}" if active else " "
             scroll_pad = "  " * row.depth
             if row.is_dir:
-                glyph = "▾" if row.open else "▸"
+                glyph = "â–¾" if row.open else "â–¸"
                 text = f"{glyph} {row.name}/"
             elif row.is_stub:
                 text = f"{row.name}  {YELLOW}[external]{RESET}"
@@ -261,8 +261,8 @@ def tree_picker(select, title):
             if select == "dir":
                 if row.is_dir:
                     return row
-                write(f" {YELLOW}Pick a folder — use ←→ to expand a section "
-                      f"and ↑↓ to choose.{RESET}")
+                write(f" {YELLOW}Pick a folder â€” use â†â†’ to expand a section "
+                      f"and â†‘â†“ to choose.{RESET}")
                 continue
             if row.is_dir:
                 if row.open:
@@ -374,7 +374,7 @@ def ensure_fork(username):
                "--jq", ".name"], check=False)
     if view.returncode == 0:
         return f"{username}/itc-index"
-    write(f"  creating your fork of {REPO_UPSTREAM} …")
+    write(f"  creating your fork of {REPO_UPSTREAM} â€¦")
     gh(["repo", "fork", REPO_UPSTREAM, "--clone=false"])
     return f"{username}/itc-index"
 
@@ -391,7 +391,7 @@ def contribute_pipeline(username, title, body, branch_suffix):
     git(["add", "-A", "public/content", "public/index.json"])
     clean = run(["git", "diff", "--cached", "--quiet"], check=False)
     if clean.returncode == 0:
-        write(f"{YELLOW}Nothing changed after all — no commit created.{RESET}")
+        write(f"{YELLOW}Nothing changed after all â€” no commit created.{RESET}")
         git(["switch", DEFAULT_BRANCH], check=False)
         git(["branch", "-D", branch], check=False)
         return None
@@ -399,7 +399,7 @@ def contribute_pipeline(username, title, body, branch_suffix):
     git(["commit", "-m", title, "-m", body])
     write("  commit created")
 
-    write(f"  pushing to {fork_slug} …")
+    write(f"  pushing to {fork_slug} â€¦")
     remote_url = f"https://github.com/{fork_slug}.git"
     remotes = run(["git", "remote"]).stdout.split()
     if "fork" not in remotes:
@@ -545,7 +545,7 @@ def host_word(url):
 
 
 def action_add(username):
-    write(f"{BOLD}{ACCENT}Add — choose where the file belongs{RESET}")
+    write(f"{BOLD}{ACCENT}Add â€” choose where the file belongs{RESET}")
     folder_node = tree_picker("dir", "Pick the destination folder")
     if folder_node is None:
         return
@@ -556,7 +556,7 @@ def action_add(username):
 
     write("How should students get this file?")
     write(f"  1  in the repository  (fine up to about {format_size(MAX_INLINE_SIZE)})")
-    write("  2  external host (MEGA, Drive, …) — you paste a link")
+    write("  2  external host (MEGA, Drive, â€¦) â€” you paste a link")
     mode = (input("1 or 2 [1]: ").strip() or "1")
 
     if mode == "2":
@@ -600,7 +600,7 @@ def action_add(username):
                        extra=["- section: " + folder_rel.replace("/", " / ")])
     branch_suffix = f"add-{slugify(folder_rel)}-{slugify(name)}"
     contribute_pipeline(username, title, body, branch_suffix)
-    write(f"{GREEN}Done — thanks for contributing!{RESET}")
+    write(f"{GREEN}Done â€” thanks for contributing!{RESET}")
 
 
 def add_external(username, folder_rel):
@@ -635,11 +635,11 @@ def add_external(username, folder_rel):
     )
     branch_suffix = f"ext-{slugify(folder_rel)}-{slugify(target)}"
     contribute_pipeline(username, title, body, branch_suffix)
-    write(f"{GREEN}Done — thanks for contributing!{RESET}")
+    write(f"{GREEN}Done â€” thanks for contributing!{RESET}")
 
 
 def action_modify(username):
-    write(f"{BOLD}{ACCENT}Modify — replace a file with an updated version{RESET}")
+    write(f"{BOLD}{ACCENT}Modify â€” replace a file with an updated version{RESET}")
     node = tree_picker("file", "Pick the file to modify")
     if node is None:
         return
@@ -670,7 +670,7 @@ def action_modify(username):
                                   "- new link: " + new_url])
         branch_suffix = f"link-{slugify(abs_path)}"
         contribute_pipeline(username, title, body, branch_suffix)
-        write(f"{GREEN}Done — thanks for contributing!{RESET}")
+        write(f"{GREEN}Done â€” thanks for contributing!{RESET}")
         return
 
     old_size = abs_path.stat().st_size
@@ -687,7 +687,7 @@ def action_modify(username):
     write(f"  new file: {source.name}  {format_size(os.path.getsize(source))}")
     write(f"  net change: {size_delta_text(old_size, os.path.getsize(source))}")
     if source.name != node.name:
-        write(f"{YELLOW}Note: names differ — the renamed file will be saved as "
+        write(f"{YELLOW}Note: names differ â€” the renamed file will be saved as "
               f"'{node.name}'.{RESET}")
     if not confirm("Submit?"):
         return
@@ -707,11 +707,11 @@ def action_modify(username):
                        extra=[f"- section: {abs_path.parent.relative_to(CONTENT_DIR).as_posix()}"])
     branch_suffix = f"modify-{slugify(abs_path)}"
     contribute_pipeline(username, title, body, branch_suffix)
-    write(f"{GREEN}Done — thanks for contributing!{RESET}")
+    write(f"{GREEN}Done â€” thanks for contributing!{RESET}")
 
 
 def action_delete(username):
-    write(f"{BOLD}{ACCENT}Delete — remove a file from the index{RESET}")
+    write(f"{BOLD}{ACCENT}Delete â€” remove a file from the index{RESET}")
     node = tree_picker("file", "Pick the file to delete")
     if node is None:
         return
@@ -761,22 +761,22 @@ def action_delete(username):
         return
     branch_suffix = f"delete-{slugify(paths[0])}"
     contribute_pipeline(username, title, body, branch_suffix)
-    write(f"{GREEN}Done — thanks for contributing!{RESET}")
+    write(f"{GREEN}Done â€” thanks for contributing!{RESET}")
 
 # ------------------------------------------------------------------- main ---
 
 
 def main():
-    write(f"{BOLD}{ACCENT}ITC Index — contribution tool{RESET}")
+    write(f"{BOLD}{ACCENT}ITC Index â€” contribution tool{RESET}")
     write(f"{DIM}You will need git and the GitHub CLI; this tool checks both.{RESET}")
     write("")
     username = preflight()
     while True:
         write("")
         write(f"{BOLD}What do you want to do?{RESET}")
-        write("  1  add      — add a new file or external link")
-        write("  2  modify   — replace a file with an updated version")
-        write("  3  delete   — remove a file")
+        write("  1  add      â€” add a new file or external link")
+        write("  2  modify   â€” replace a file with an updated version")
+        write("  3  delete   â€” remove a file")
         write("  q  exit")
         choice = (input("> ").strip().lower() or "")[:6]
         if choice in ("q", "quit", "exit", "bye"):
@@ -794,7 +794,7 @@ def main():
         except (KeyboardInterrupt, EOFError):
             write()
             write("Stopped. Nothing was committed; your partial change may "
-                  "still be on disk — run `git status` to see.")
+                  "still be on disk â€” run `git status` to see.")
         except RuntimeError as error:
             write(f"{RED}{error}{RESET}")
 

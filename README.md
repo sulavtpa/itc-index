@@ -1,9 +1,9 @@
-# ITC Index
+﻿# ITC Index
 
 A fast, searchable file index for IT Circle resources at Khwopa Engineering
 College (KhEC). The site is built with SolidJS and hosted on Vercel; course
 content lives in this repository under `public/content/`, and files that are
-too large for GitHub are linked from external hosts (MEGA, Google Drive, …).
+too large for GitHub are linked from external hosts (MEGA, Google Drive, â€¦).
 
 ## Sections
 
@@ -19,7 +19,7 @@ public/content/
   misc/               anything else worth keeping
 ```
 
-New folders can be added anytime — the build treats the first folder level as
+New folders can be added anytime â€” the build treats the first folder level as
 a section automatically.
 
 ### External files
@@ -57,10 +57,10 @@ py contribute.py
 The tool walks you through **add / modify / delete**, opens a file picker,
 rebuilds the index, runs the checks and then:
 
-1. creates a `contrib/…` branch,
+1. creates a `contrib/â€¦` branch,
 2. commits with a detailed message,
 3. pushes to your fork,
-4. opens a pull request — all automatically via the GitHub CLI (gh).
+4. opens a pull request â€” all automatically via the GitHub CLI (gh).
 
 Requirements: `git`, GitHub CLI (`gh`, signed in with `gh auth login`), and
 Python 3. The tool guides you through installing whichever is missing.
@@ -80,6 +80,6 @@ directory `dist`. `public/` is copied into the build, which is how
 
 ## Tag colors
 
-Tags are colored automatically — the color is derived from a hash of the tag
+Tags are colored automatically â€” the color is derived from a hash of the tag
 name (deterministic, low-saturation, tuned for the light theme), so there is
 no color configuration file to maintain.

@@ -145,6 +145,8 @@ def scan_real_files():
     for path in CONTENT_DIR.rglob("*"):
         if not path.is_file() or path.name.startswith("."):
             continue
+        if path.name == "README.md":
+            continue  # empty-folder placeholder, never content
         if path.name.startswith(STUB_PREFIX):
             continue
         real[path.relative_to(ROOT).as_posix()] = path

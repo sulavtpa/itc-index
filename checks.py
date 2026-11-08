@@ -33,6 +33,8 @@ def content_files():
     for path in CONTENT_DIR.rglob("*"):
         if not path.is_file() or path.name.startswith("."):
             continue
+        if path.name == "README.md":
+            continue  # empty-folder placeholder, never content
         rel = path.relative_to(ROOT).as_posix()
         if path.name.startswith(STUB_PREFIX):
             stubs[path.name] = path

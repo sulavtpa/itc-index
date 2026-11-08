@@ -54,7 +54,7 @@ export default function App() {
       return `${count} ${count === 1 ? "result" : "results"}`;
     }
     const count = sectionDocs().length;
-    return `${SECTION_LABELS[section()]} — ${count} ${count === 1 ? "file" : "files"}`;
+    return `${SECTION_LABELS[section()]} · ${count} ${count === 1 ? "file" : "files"}`;
   };
 
   const pick = (doc, element) => {
@@ -190,8 +190,15 @@ export default function App() {
       </main>
 
       <footer class="site-footer">
-        <span>By KhEC IT Circle</span>
-        <a href="https://github.com/sulavtpa/itc-index" target="_blank" rel="noopener noreferrer">Repository</a>
+        <span class="footer-brand">
+          <img src="/assets/icons/itcircle.png" alt="" aria-hidden="true">
+          KhEC IT Circle
+        </span>
+        <div class="footer-links">
+          <a href="https://www.instagram.com/itcirclekhec/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://khecitcircle.codeberg.page/itcircle-linktree/" target="_blank" rel="noopener noreferrer">IT Circle</a>
+          <a href="https://github.com/sulavtpa/itc-index" target="_blank" rel="noopener noreferrer">Repository</a>
+        </div>
       </footer>
     </>
   );

@@ -31,17 +31,17 @@ export default function Faq() {
         <summary>How do I contribute?</summary>
         <p>
           Clone the repository and run <code>py contribute.py</code>. It walks you through
-          adding, updating or deleting a file, builds the index and submits a pull request —
-          no GitHub experience needed.
+          adding, updating or deleting a file, builds the index and submits a pull request.
+          No GitHub experience needed.
         </p>
       </details>
       <details>
         <summary>I found a mistake or a missing file</summary>
         <p>
-          Tell us, even if it is a small detail. You can{" "}
-          <a href="https://github.com/sulavtpa/itc-index/issues" target="_blank" rel="noopener noreferrer">
-            open an issue on GitHub</a>{" "}
-          or message the IT Circle directly.
+          Tell us, even if it is a small detail. Message the IT Circle on{" "}
+          <a href="https://www.instagram.com/itcirclekhec/" target="_blank" rel="noopener noreferrer">
+            Instagram</a>{" "}
+          and we will fix it.
         </p>
       </details>
       <details>
