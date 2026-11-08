@@ -34,6 +34,11 @@ export function isImage(doc) {
   return IMAGE_EXTENSIONS.has(fileExtension(doc.id));
 }
 
+export function fileUrl(doc) {
+  const id = doc.id.replace(/^public\/content\//, "");
+  return `/content/${id.split("/").map(encodeURIComponent).join("/")}`;
+}
+
 export function fileIcon(doc) {
   const extension = fileExtension(doc.id);
   return ICONS_BY_EXTENSION[extension]

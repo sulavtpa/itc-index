@@ -1,6 +1,6 @@
 import { createEffect, createSignal, Show } from "solid-js";
 import Tags from "./Tags";
-import { externalLabel, fileBaseName, fileExtension, formatSize, isImage } from "../lib/files";
+import { externalLabel, fileBaseName, fileExtension, fileUrl, formatSize, isImage } from "../lib/files";
 
 export default function Preview(props) {
   const [loaded, setLoaded] = createSignal(false);
@@ -37,7 +37,7 @@ export default function Preview(props) {
           <Show when={props.doc()}>
             {(doc) => (
               <Show
-                when={isImage(doc()) && !failed()}
+                when={doc().source !== "external" && isImage(doc()) && !failed()}
                 fallback={
                   <Show
                     when={failed()}
@@ -54,10 +54,10 @@ export default function Preview(props) {
                   </Show>
                 }
               >
-                <a href={encodeURI(doc().id)} target="_blank" rel="noopener noreferrer"
+                <a href={fileUrl(doc())} target="_blank" rel="noopener noreferrer"
                   aria-label={`Open ${doc().title} full size`}>
                   <img alt={doc().title} classList={{ loaded: loaded() }} decoding="async" loading="lazy"
-                    src={encodeURI(doc().id)}
+                    src={fileUrl(doc())}
                     onLoad={() => setLoaded(true)}
                     onError={() => setFailed(true)}
                   />
@@ -87,7 +87,7 @@ export default function Preview(props) {
             <Show
               when={doc().source === "external"}
               fallback={
-                <a class="button" href={encodeURI(doc().id)} download={fileBaseName(doc().id)}>
+                <a class="button" href={fileUrl(doc())} download={fileBaseName(doc().id)}>
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 17v3h14v-3" /></svg>
                   Download
                 </a>
