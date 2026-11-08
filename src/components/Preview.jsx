@@ -56,6 +56,12 @@ export default function Preview(props) {
               >
                 <a href={fileUrl(doc())} target="_blank" rel="noopener noreferrer"
                   aria-label={`Open ${doc().title} full size`}>
+                  <Show when={!loaded() && !failed()}>
+                    <span class="preview__loading" role="status">
+                      <img src="/assets/icons/loading.gif" alt="" />
+                      <span class="visually-hidden">Loading image preview</span>
+                    </span>
+                  </Show>
                   <img alt={doc().title} classList={{ loaded: loaded() }} decoding="async" loading="lazy"
                     src={fileUrl(doc())}
                     onLoad={() => setLoaded(true)}
