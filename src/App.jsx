@@ -191,12 +191,12 @@ export default function App() {
 
       <footer class="site-footer">
         <span class="footer-brand">
-          <img src="/assets/icons/itcircle.png" alt="" aria-hidden="true">
+          <img src="/assets/icons/itcircle.png" alt="" aria-hidden="true" />
           KhEC IT Circle
         </span>
         <div class="footer-links">
           <a href="https://www.instagram.com/itcirclekhec/" target="_blank" rel="noopener noreferrer">Instagram</a>
-          <a href="https://khecitcircle.codeberg.page/itcircle-linktree/" target="_blank" rel="noopener noreferrer">IT Circle</a>
+          <a href="https://khecitcircle.codeberg.page/itcircle-linktree/" target="_blank" rel="noopener noreferrer">Linktree</a>
           <a href="https://github.com/sulavtpa/itc-index" target="_blank" rel="noopener noreferrer">Repository</a>
         </div>
       </footer>
