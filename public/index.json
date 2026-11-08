@@ -1,0 +1,771 @@
+[
+  {
+    "id": "public/content/courses/arch/10th-sem-arch.webp",
+    "title": "10th Semester Courses Table for Architecture",
+    "tags": [
+      "Study Material",
+      "BE Architecture",
+      "10th Semester",
+      "5th Year"
+    ],
+    "description": "Course structure for the 10th semester of Architecture.",
+    "size": 15242,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/arch/1st-sem-arch.webp",
+    "title": "1st Semester Courses Table for Architecture",
+    "tags": [
+      "Study Material",
+      "BE Architecture",
+      "1st Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 1st semester of Architecture.",
+    "size": 31476,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/arch/2nd-sem-arch.webp",
+    "title": "2nd Semester Courses Table for Architecture",
+    "tags": [
+      "Study Material",
+      "BE Architecture",
+      "2nd Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 2nd semester of Architecture.",
+    "size": 33708,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/arch/3rd-sem-arch.webp",
+    "title": "3rd Semester Courses Table for Architecture",
+    "tags": [
+      "Study Material",
+      "BE Architecture",
+      "3rd Semester",
+      "2nd Year"
+    ],
+    "description": "Course structure for the 3rd semester of Architecture.",
+    "size": 35222,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/arch/4th-sem-arch.webp",
+    "title": "4th Semester Courses Table for Architecture",
+    "tags": [
+      "Study Material",
+      "BE Architecture",
+      "4th Semester",
+      "2nd Year"
+    ],
+    "description": "Course structure for the 4th semester of Architecture.",
+    "size": 32740,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/arch/5th-sem-arch.webp",
+    "title": "5th Semester Courses Table for Architecture",
+    "tags": [
+      "Study Material",
+      "BE Architecture",
+      "5th Semester",
+      "3rd Year"
+    ],
+    "description": "Course structure for the 5th semester of Architecture.",
+    "size": 31248,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/arch/6th-sem-arch.webp",
+    "title": "6th Semester Courses Table for Architecture",
+    "tags": [
+      "Study Material",
+      "BE Architecture",
+      "6th Semester",
+      "3rd Year"
+    ],
+    "description": "Course structure for the 6th semester of Architecture.",
+    "size": 35010,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/arch/7th-sem-arch.webp",
+    "title": "7th Semester Courses Table for Architecture",
+    "tags": [
+      "Study Material",
+      "BE Architecture",
+      "7th Semester",
+      "4th Year"
+    ],
+    "description": "Course structure for the 7th semester of Architecture.",
+    "size": 34594,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/arch/8th-sem-arch.webp",
+    "title": "8th Semester Courses Table for Architecture",
+    "tags": [
+      "Study Material",
+      "BE Architecture",
+      "8th Semester",
+      "4th Year"
+    ],
+    "description": "Course structure for the 8th semester of Architecture.",
+    "size": 13222,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/arch/9th-sem-arch.webp",
+    "title": "9th Semester Courses Table for Architecture",
+    "tags": [
+      "Study Material",
+      "BE Architecture",
+      "9th Semester",
+      "5th Year"
+    ],
+    "description": "Course structure for the 9th semester of Architecture.",
+    "size": 31586,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/bca-it/1st-sem-bca.webp",
+    "title": "1st Semester Courses Table for BCA-IT",
+    "tags": [
+      "Study Material",
+      "BCA-IT",
+      "1st Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 1st semester of BCA-IT.",
+    "size": 25984,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/bca-it/2nd-sem-bca.webp",
+    "title": "2nd Semester Courses Table for BCA-IT",
+    "tags": [
+      "Study Material",
+      "BCA-IT",
+      "2nd Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 2nd semester of BCA-IT.",
+    "size": 32518,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/bca-it/3rd-sem-bca.webp",
+    "title": "3rd Semester Courses Table for BCA-IT",
+    "tags": [
+      "Study Material",
+      "BCA-IT",
+      "3rd Semester",
+      "2nd Year"
+    ],
+    "description": "Course structure for the 3rd semester of BCA-IT.",
+    "size": 27716,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/bca-it/4th-sem-bca.webp",
+    "title": "4th Semester Courses Table for BCA-IT",
+    "tags": [
+      "Study Material",
+      "BCA-IT",
+      "4th Semester",
+      "2nd Year"
+    ],
+    "description": "Course structure for the 4th semester of BCA-IT.",
+    "size": 28816,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/bca-it/5th-sem-bca.webp",
+    "title": "5th Semester Courses Table for BCA-IT",
+    "tags": [
+      "Study Material",
+      "BCA-IT",
+      "5th Semester",
+      "3rd Year"
+    ],
+    "description": "Course structure for the 5th semester of BCA-IT.",
+    "size": 30666,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/bca-it/6th-sem-bca.webp",
+    "title": "6th Semester Courses Table for BCA-IT",
+    "tags": [
+      "Study Material",
+      "BCA-IT",
+      "6th Semester",
+      "3rd Year"
+    ],
+    "description": "Course structure for the 6th semester of BCA-IT.",
+    "size": 26200,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/bca-it/7th-sem-bca.webp",
+    "title": "7th Semester Courses Table for BCA-IT",
+    "tags": [
+      "Study Material",
+      "BCA-IT",
+      "7th Semester",
+      "4th Year"
+    ],
+    "description": "Course structure for the 7th semester of BCA-IT.",
+    "size": 25008,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/bca-it/8th-sem-bca.webp",
+    "title": "8th Semester Courses Table for BCA-IT",
+    "tags": [
+      "Study Material",
+      "BCA-IT",
+      "8th Semester",
+      "4th Year"
+    ],
+    "description": "Course structure for the 8th semester of BCA-IT.",
+    "size": 23402,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/bit/1st-sem-bit.webp",
+    "title": "1st Semester Courses Table for BIT",
+    "tags": [
+      "Study Material",
+      "BIT",
+      "1st Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 1st semester of BIT.",
+    "size": 27080,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/bit/2nd-sem-bit.webp",
+    "title": "2nd Semester Courses Table for BIT",
+    "tags": [
+      "Study Material",
+      "BIT",
+      "2nd Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 2nd semester of BIT.",
+    "size": 26606,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/civil/1st-sem-civil.webp",
+    "title": "1st Semester Courses Table for Civil Engineering",
+    "tags": [
+      "Study Material",
+      "BE Civil Engineering",
+      "1st Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 1st semester of Civil Engineering.",
+    "size": 29650,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/civil/2nd-sem-civil.webp",
+    "title": "2nd Semester Courses Table for Civil Engineering",
+    "tags": [
+      "Study Material",
+      "BE Civil Engineering",
+      "2nd Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 2nd semester of Civil Engineering.",
+    "size": 28392,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/civil/3rd-sem-civil.webp",
+    "title": "3rd Semester Courses Table for Civil Engineering",
+    "tags": [
+      "Study Material",
+      "BE Civil Engineering",
+      "3rd Semester",
+      "2nd Year"
+    ],
+    "description": "Course structure for the 3rd semester of Civil Engineering.",
+    "size": 28654,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/civil/4th-sem-civil.webp",
+    "title": "4th Semester Courses Table for Civil Engineering",
+    "tags": [
+      "Study Material",
+      "BE Civil Engineering",
+      "4th Semester",
+      "2nd Year"
+    ],
+    "description": "Course structure for the 4th semester of Civil Engineering.",
+    "size": 31862,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/civil/5th-sem-civil.webp",
+    "title": "5th Semester Courses Table for Civil Engineering",
+    "tags": [
+      "Study Material",
+      "BE Civil Engineering",
+      "5th Semester",
+      "3rd Year"
+    ],
+    "description": "Course structure for the 5th semester of Civil Engineering.",
+    "size": 31346,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/civil/6th-sem-civil.webp",
+    "title": "6th Semester Courses Table for Civil Engineering",
+    "tags": [
+      "Study Material",
+      "BE Civil Engineering",
+      "6th Semester",
+      "3rd Year"
+    ],
+    "description": "Course structure for the 6th semester of Civil Engineering.",
+    "size": 23820,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/civil/7th-sem-civil.webp",
+    "title": "7th Semester Courses Table for Civil Engineering",
+    "tags": [
+      "Study Material",
+      "BE Civil Engineering",
+      "7th Semester",
+      "4th Year"
+    ],
+    "description": "Course structure for the 7th semester of Civil Engineering.",
+    "size": 45416,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/civil/8th-sem-civil.webp",
+    "title": "8th Semester Courses Table for Civil Engineering",
+    "tags": [
+      "Study Material",
+      "BE Civil Engineering",
+      "8th Semester",
+      "4th Year"
+    ],
+    "description": "Course structure for the 8th semester of Civil Engineering.",
+    "size": 31358,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/computer/1st-sem-comp.webp",
+    "title": "1st Semester Courses Table for Computer Engineering",
+    "tags": [
+      "Study Material",
+      "BE Computer Engineering",
+      "1st Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 1st semester of Computer Engineering.",
+    "size": 29364,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/computer/2nd-sem-comp.webp",
+    "title": "2nd Semester Courses Table for Computer Engineering",
+    "tags": [
+      "Study Material",
+      "BE Computer Engineering",
+      "2nd Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 2nd semester of Computer Engineering.",
+    "size": 27884,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/computer/3rd-sem-comp.webp",
+    "title": "3rd Semester Courses Table for Computer Engineering",
+    "tags": [
+      "Study Material",
+      "BE Computer Engineering",
+      "3rd Semester",
+      "2nd Year"
+    ],
+    "description": "Course structure for the 3rd semester of Computer Engineering.",
+    "size": 33420,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/computer/4th-sem-comp.webp",
+    "title": "4th Semester Courses Table for Computer Engineering",
+    "tags": [
+      "Study Material",
+      "BE Computer Engineering",
+      "4th Semester",
+      "2nd Year"
+    ],
+    "description": "Course structure for the 4th semester of Computer Engineering.",
+    "size": 28442,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/computer/5th-sem-comp.webp",
+    "title": "5th Semester Courses Table for Computer Engineering",
+    "tags": [
+      "Study Material",
+      "BE Computer Engineering",
+      "5th Semester",
+      "3rd Year"
+    ],
+    "description": "Course structure for the 5th semester of Computer Engineering.",
+    "size": 30350,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/computer/6th-sem-comp.webp",
+    "title": "6th Semester Courses Table for Computer Engineering",
+    "tags": [
+      "Study Material",
+      "BE Computer Engineering",
+      "6th Semester",
+      "3rd Year"
+    ],
+    "description": "Course structure for the 6th semester of Computer Engineering.",
+    "size": 54200,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/computer/7th-sem-comp.webp",
+    "title": "7th Semester Courses Table for Computer Engineering",
+    "tags": [
+      "Study Material",
+      "BE Computer Engineering",
+      "7th Semester",
+      "4th Year"
+    ],
+    "description": "Course structure for the 7th semester of Computer Engineering.",
+    "size": 71662,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/computer/8th-sem-comp.webp",
+    "title": "8th Semester Courses Table for Computer Engineering",
+    "tags": [
+      "Study Material",
+      "BE Computer Engineering",
+      "8th Semester",
+      "4th Year"
+    ],
+    "description": "Course structure for the 8th semester of Computer Engineering.",
+    "size": 46660,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/elx/1st-sem-eca.webp",
+    "title": "1st Semester Courses Table for Elx. & Comm. Engineering",
+    "tags": [
+      "Study Material",
+      "BE Electronics & Communication Engineering",
+      "1st Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 1st semester of Elx. & Comm. Engineering.",
+    "size": 25726,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/elx/2nd-sem-eca.webp",
+    "title": "2nd Semester Courses Table for Elx. & Comm. Engineering",
+    "tags": [
+      "Study Material",
+      "BE Electronics & Communication Engineering",
+      "2nd Semester",
+      "1st Year"
+    ],
+    "description": "Course structure for the 2nd semester of Elx. & Comm. Engineering.",
+    "size": 29280,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/elx/3rd-sem-eca.webp",
+    "title": "3rd Semester Courses Table for Elx. & Comm. Engineering",
+    "tags": [
+      "Study Material",
+      "BE Electronics & Communication Engineering",
+      "3rd Semester",
+      "2nd Year"
+    ],
+    "description": "Course structure for the 3rd semester of Elx. & Comm. Engineering.",
+    "size": 27546,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/elx/4th-sem-eca.webp",
+    "title": "4th Semester Courses Table for Elx. & Comm. Engineering",
+    "tags": [
+      "Study Material",
+      "BE Electronics & Communication Engineering",
+      "4th Semester",
+      "2nd Year"
+    ],
+    "description": "Course structure for the 4th semester of Elx. & Comm. Engineering.",
+    "size": 28956,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/elx/5th-sem-eca.webp",
+    "title": "5th Semester Courses Table for Elx. & Comm. Engineering",
+    "tags": [
+      "Study Material",
+      "BE Electronics & Communication Engineering",
+      "5th Semester",
+      "3rd Year"
+    ],
+    "description": "Course structure for the 5th semester of Elx. & Comm. Engineering.",
+    "size": 26774,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/elx/6th-sem-eca.webp",
+    "title": "6th Semester Courses Table for Elx. & Comm. Engineering",
+    "tags": [
+      "Study Material",
+      "BE Electronics & Communication Engineering",
+      "6th Semester",
+      "3rd Year"
+    ],
+    "description": "Course structure for the 6th semester of Elx. & Comm. Engineering.",
+    "size": 30524,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/elx/7th-sem-eca.webp",
+    "title": "7th Semester Courses Table for Elx. & Comm. Engineering",
+    "tags": [
+      "Study Material",
+      "BE Electronics & Communication Engineering",
+      "7th Semester",
+      "4th Year"
+    ],
+    "description": "Course structure for the 7th semester of Elx. & Comm. Engineering.",
+    "size": 29694,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/courses/elx/8th-sem-eca.webp",
+    "title": "8th Semester Courses Table for Elx. & Comm. Engineering",
+    "tags": [
+      "Study Material",
+      "BE Electronics & Communication Engineering",
+      "8th Semester",
+      "4th Year"
+    ],
+    "description": "Course structure for the 8th semester of Elx. & Comm. Engineering.",
+    "size": 25574,
+    "ext": "webp",
+    "icon": "image",
+    "section": "courses",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/misc/README.md",
+    "title": "Readme",
+    "tags": [
+      "Miscellaneous"
+    ],
+    "description": "MD in the misc section.",
+    "size": 60,
+    "ext": "md",
+    "icon": "text",
+    "section": "misc",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/past-questions/README.md",
+    "title": "Readme",
+    "tags": [
+      "Past Question"
+    ],
+    "description": "MD in the past questions section.",
+    "size": 60,
+    "ext": "md",
+    "icon": "text",
+    "section": "past-questions",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/projects/README.md",
+    "title": "Readme",
+    "tags": [
+      "Project"
+    ],
+    "description": "MD in the projects section.",
+    "size": 60,
+    "ext": "md",
+    "icon": "text",
+    "section": "projects",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/syllabus/README.md",
+    "title": "Readme",
+    "tags": [
+      "Syllabus"
+    ],
+    "description": "MD in the syllabus section.",
+    "size": 60,
+    "ext": "md",
+    "icon": "text",
+    "section": "syllabus",
+    "source": "repo"
+  },
+  {
+    "id": "public/content/timetable/README.md",
+    "title": "Readme",
+    "tags": [
+      "Timetable"
+    ],
+    "description": "MD in the timetable section.",
+    "size": 60,
+    "ext": "md",
+    "icon": "text",
+    "section": "timetable",
+    "source": "repo"
+  }
+]

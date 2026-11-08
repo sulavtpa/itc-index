@@ -8,7 +8,7 @@ Usage:
     py make_table.py "Civil Engineering"      all semesters of civil
     py make_table.py "Civil Engineering" 1    only civil semester 1
 
-Images are saved like: courses/computer/1st-sem-comp.webp
+Images are saved like: public/content/courses/computer/1st-sem-comp.webp
 
 make sure there is pillow installed, if not run:
 
@@ -167,14 +167,14 @@ def make_one_table(department, semester):
     file_name = word + "-sem-" + short_name + ".webp"
     courses = department["semesters"][semester]
 
-    folder_path = os.path.join(HERE, "courses", folder_name)
+    folder_path = os.path.join(HERE, "public", "content", "courses", folder_name)
     file_path = os.path.join(folder_path, file_name)
 
     try:
         os.makedirs(folder_path, exist_ok=True)
         image = draw_table(courses)
         image.save(file_path, "WEBP", lossless=True)
-        print("  Saved: courses/" + folder_name + "/" + file_name)
+        print("  Saved: public/content/courses/" + folder_name + "/" + file_name)
     except FileNotFoundError:
         print("  ERROR: could not find assets/OpenSans.ttf (check the font file name)")
     except KeyError as error:
