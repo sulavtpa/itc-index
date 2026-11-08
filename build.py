@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parent
 CONTENT_DIR = ROOT / "public" / "content"
 COURSE_DATA = ROOT / "course.json"
 INDEX_FILE = ROOT / "public" / "index.json"
+TAG_OVERRIDES_FILE = ROOT / "public" / "tag-overrides.json"
 
 STUB_PREFIX = "(external)-"
 STUB_SUFFIX = ".txt"
@@ -80,6 +81,20 @@ def read_course_data():
     if not isinstance(departments, list):
         raise ValueError("course.json must contain a departments list")
     return departments
+
+
+def read_tag_overrides():
+    if not TAG_OVERRIDES_FILE.exists():
+        return {}
+    with TAG_OVERRIDES_FILE.open(encoding="utf-8") as file:
+        overrides = json.load(file)
+    if not isinstance(overrides, dict):
+        raise ValueError("public/tag-overrides.json must contain an object")
+    for file_id, tags in overrides.items():
+        if not isinstance(file_id, str) or not isinstance(tags, list) \
+                or any(not isinstance(tag, str) or not tag.strip() for tag in tags):
+            raise ValueError("Tag overrides must map file IDs to non-empty tag lists")
+    return overrides
 
 
 def department_maps():
@@ -218,6 +233,7 @@ def describe_parts(part_path, *, name, stub_url=None, dept_by_folder, names_by_s
 
 
 def build():
+    tag_overrides = read_tag_overrides()
     dept_by_folder = {}
     names_by_short = {}
     departments = read_course_data()
@@ -289,6 +305,8 @@ def build():
                              f"{doc['id']} already produced by a real file or stub.")
         documents.append(doc)
 
+    for doc in documents:
+        doc["tags"] = dedupe([*doc["tags"], *tag_overrides.get(doc["id"], [])])
     documents.sort(key=lambda d: d["id"])
     INDEX_FILE.write_text(
         json.dumps(documents, ensure_ascii=False, indent=2) + "\n",
@@ -300,9 +318,12 @@ def build():
 
 def dedupe(items):
     out = []
+    seen = set()
     for item in items:
-        if item and item not in out:
+        key = item.casefold() if isinstance(item, str) else item
+        if item and key not in seen:
             out.append(item)
+            seen.add(key)
     return out
 
 

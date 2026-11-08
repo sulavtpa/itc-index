@@ -11,6 +11,7 @@ Usage:  py contribute.py
 """
 
 import atexit
+import json
 import os
 import re
 import shutil
@@ -21,6 +22,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 CONTENT_DIR = ROOT / "public" / "content"
+INDEX_FILE = ROOT / "public" / "index.json"
+TAG_OVERRIDES_FILE = ROOT / "public" / "tag-overrides.json"
 STUB_PREFIX = "(external)-"
 STUB_SUFFIX = ".txt"
 STUB_NAME = STUB_PREFIX + "{target}" + STUB_SUFFIX
@@ -212,16 +215,16 @@ def tree_picker(select, title):
 
         sys.stdout.write("\x1b[2J\x1b[H")
         write(f"{BOLD}{ACCENT}{title}{RESET}")
-        write(f"{DIM}arrows move Â· â†â†’ collapse/expand Â· Enter select Â· "
-              f"Esc cancel Â· type to filter: â€œ{filter_text}â€{RESET}")
+        write(f"{DIM}Up/down move | Left/right collapse/expand | Enter select | "
+              f"Esc cancel | type to filter: \"{filter_text}\"{RESET}")
         write("")
         for offset, row in enumerate(rows[scroll:scroll + VISIBILITY]):
             active = scroll + offset == cursor
             mark = f"{ACCENT}>{RESET}" if active else " "
             scroll_pad = "  " * row.depth
             if row.is_dir:
-                glyph = "â–¾" if row.open else "â–¸"
-                text = f"{glyph} {row.name}/"
+                marker = "[-]" if row.open else "[+]"
+                text = f"{marker} {row.name}/"
             elif row.is_stub:
                 text = f"{row.name}  {YELLOW}[external]{RESET}"
             else:
@@ -261,8 +264,8 @@ def tree_picker(select, title):
             if select == "dir":
                 if row.is_dir:
                     return row
-                write(f" {YELLOW}Pick a folder â€” use â†â†’ to expand a section "
-                      f"and â†‘â†“ to choose.{RESET}")
+                    write(f" {YELLOW}Pick a folder; use left/right to expand and "
+                        f"up/down to choose.{RESET}")
                 continue
             if row.is_dir:
                 if row.open:
@@ -374,7 +377,7 @@ def ensure_fork(username):
                "--jq", ".name"], check=False)
     if view.returncode == 0:
         return f"{username}/itc-index"
-    write(f"  creating your fork of {REPO_UPSTREAM} â€¦")
+    write(f"  creating your fork of {REPO_UPSTREAM}...")
     gh(["repo", "fork", REPO_UPSTREAM, "--clone=false"])
     return f"{username}/itc-index"
 
@@ -388,10 +391,17 @@ def contribute_pipeline(username, title, body, branch_suffix):
     git(["switch", "-C", branch, f"origin/{DEFAULT_BRANCH}"])
     write(f"  branch: {branch}")
 
-    git(["add", "-A", "public/content", "public/index.json"])
+    stage_paths = ["public/content", "public/index.json"]
+    tracked_tags = run(
+        ["git", "ls-files", "--error-unmatch", "public/tag-overrides.json"],
+        check=False,
+    )
+    if TAG_OVERRIDES_FILE.exists() or tracked_tags.returncode == 0:
+        stage_paths.append("public/tag-overrides.json")
+    git(["add", "-A", *stage_paths])
     clean = run(["git", "diff", "--cached", "--quiet"], check=False)
     if clean.returncode == 0:
-        write(f"{YELLOW}Nothing changed after all â€” no commit created.{RESET}")
+        write(f"{YELLOW}Nothing changed after all - no commit created.{RESET}")
         git(["switch", DEFAULT_BRANCH], check=False)
         git(["branch", "-D", branch], check=False)
         return None
@@ -399,7 +409,7 @@ def contribute_pipeline(username, title, body, branch_suffix):
     git(["commit", "-m", title, "-m", body])
     write("  commit created")
 
-    write(f"  pushing to {fork_slug} â€¦")
+    write(f"  pushing to {fork_slug}...")
     remote_url = f"https://github.com/{fork_slug}.git"
     remotes = run(["git", "remote"]).stdout.split()
     if "fork" not in remotes:
@@ -474,6 +484,126 @@ def tkinter_pick(title):
     return Path(chosen)
 
 
+def read_tag_overrides():
+    if not TAG_OVERRIDES_FILE.exists():
+        return {}
+    try:
+        with TAG_OVERRIDES_FILE.open(encoding="utf-8") as file:
+            overrides = json.load(file)
+    except (OSError, json.JSONDecodeError) as error:
+        raise RuntimeError(f"Could not read tag overrides: {error}") from error
+    if not isinstance(overrides, dict):
+        raise RuntimeError("public/tag-overrides.json must contain an object.")
+    for file_id, tags in overrides.items():
+        if not isinstance(file_id, str) or not isinstance(tags, list) \
+                or any(not isinstance(tag, str) or not tag.strip() for tag in tags):
+            raise RuntimeError("Tag overrides must map file IDs to non-empty tag lists.")
+    return overrides
+
+
+def save_tag_overrides(overrides):
+    if not overrides:
+        TAG_OVERRIDES_FILE.unlink(missing_ok=True)
+        return
+    TAG_OVERRIDES_FILE.write_text(
+        json.dumps(overrides, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def index_tags(file_id):
+    try:
+        with INDEX_FILE.open(encoding="utf-8") as file:
+            documents = json.load(file)
+    except (OSError, json.JSONDecodeError):
+        return []
+    return next((doc.get("tags", []) for doc in documents
+                 if doc.get("id") == file_id), [])
+
+
+def edit_tags(file_id):
+    """Edit manually assigned tags; tags derived from the file path stay intact."""
+    overrides = read_tag_overrides()
+    selected = list(overrides.get(file_id, []))
+    all_tags = {tag.casefold(): tag for doc in json.loads(
+        INDEX_FILE.read_text(encoding="utf-8")) if isinstance(doc, dict)
+        for tag in doc.get("tags", []) if isinstance(tag, str)}
+    for tags in overrides.values():
+        for tag in tags:
+            all_tags.setdefault(tag.casefold(), tag)
+
+    query = ""
+    cursor = 0
+    while True:
+        matches = sorted(
+            (tag for tag in all_tags.values()
+             if query.casefold() in tag.casefold()),
+            key=lambda tag: (not tag.casefold().startswith(query.casefold()),
+                             tag.casefold()),
+        )[:8]
+        rows = [("tag", tag) for tag in matches]
+        create_label = query.strip()
+        if create_label and create_label.casefold() not in all_tags:
+            rows.append(("create", create_label))
+        rows.append(("done", "Done"))
+        cursor = min(cursor, len(rows) - 1)
+
+        sys.stdout.write("\x1b[2J\x1b[H")
+        write(f"{BOLD}{ACCENT}Update tags{RESET}  {DIM}{file_id}{RESET}")
+        write(f"{DIM}Type to search | Up/down choose | Enter toggle | Esc cancel{RESET}")
+        automatic = [tag for tag in index_tags(file_id)
+                     if tag.casefold() not in {item.casefold() for item in selected}]
+        if automatic:
+            write(f"Automatic tags stay: {', '.join(automatic)}")
+        write(f"Selected manual tags: {', '.join(selected) if selected else '(none)'}")
+        write(f"Search: {query}_")
+        write("")
+        if not matches and not create_label:
+            write(f" {DIM}No tags yet. Type to search or create one.{RESET}")
+        for row_index, (kind, value) in enumerate(rows):
+            marker = ">" if row_index == cursor else " "
+            if kind == "tag":
+                checked = "x" if value.casefold() in {
+                    item.casefold() for item in selected
+                } else " "
+                write(f" {marker} [{checked}] {value}")
+            elif kind == "create":
+                write(f" {marker} + Create new tag: {value}")
+            else:
+                write(f" {marker} Done")
+
+        key = read_key()
+        if key in ("CTRLC", "ESC"):
+            return None
+        if key == "UP":
+            cursor = max(0, cursor - 1)
+        elif key == "DOWN":
+            cursor = min(len(rows) - 1, cursor + 1)
+        elif key == "BACKSPACE":
+            query = query[:-1]
+            cursor = 0
+        elif key == "ENTER":
+            kind, value = rows[cursor]
+            if kind == "done":
+                return selected
+            if kind == "create":
+                selected.append(value)
+                all_tags[value.casefold()] = value
+                query = ""
+                cursor = 0
+                continue
+            selected_key = value.casefold()
+            current = next((tag for tag in selected
+                            if tag.casefold() == selected_key), None)
+            if current is None:
+                selected.append(value)
+            else:
+                selected.remove(current)
+        elif isinstance(key, str) and len(key) == 1 and key.isprintable():
+            query += key
+            cursor = 0
+
+
 # Files are parked here while build/checks run, so they never land under
 # public/content (which would get indexed and committed by mistake).
 TEMP_DIR = Path(tempfile.mkdtemp(prefix="itc-contrib-"))
@@ -545,7 +675,7 @@ def host_word(url):
 
 
 def action_add(username):
-    write(f"{BOLD}{ACCENT}Add â€” choose where the file belongs{RESET}")
+    write(f"{BOLD}{ACCENT}Add - choose where the file belongs{RESET}")
     folder_node = tree_picker("dir", "Pick the destination folder")
     if folder_node is None:
         return
@@ -556,7 +686,7 @@ def action_add(username):
 
     write("How should students get this file?")
     write(f"  1  in the repository  (fine up to about {format_size(MAX_INLINE_SIZE)})")
-    write("  2  external host (MEGA, Drive, â€¦) â€” you paste a link")
+    write("  2  external host (MEGA, Drive, etc.) - paste a link")
     mode = (input("1 or 2 [1]: ").strip() or "1")
 
     if mode == "2":
@@ -585,13 +715,29 @@ def action_add(username):
         if confirm("Host the file externally instead?"):
             add_external(username, folder_rel)
             return
+    tag_id = destination.relative_to(ROOT).as_posix()
+    new_tags = None
+    if confirm("Set tags for this file?"):
+        new_tags = edit_tags(tag_id)
+        if new_tags is None:
+            return
     shutil.copy2(source, destination)
+    old_overrides = read_tag_overrides()
+    if new_tags is not None:
+        updated_overrides = dict(old_overrides)
+        if new_tags:
+            updated_overrides[tag_id] = new_tags
+        else:
+            updated_overrides.pop(tag_id, None)
+        save_tag_overrides(updated_overrides)
     if not rebuild_and_check():
         return
     write(f"  copied to public/content/{folder_rel}/{name} "
           f"({format_size(destination.stat().st_size)})")
     if not confirm(f"Add '{name}' and submit the pull request?"):
         destination.unlink()
+        save_tag_overrides(old_overrides)
+        rebuild_and_check()
         write(f"{YELLOW}Cancelled; the copied file was removed.{RESET}")
         return
     title = f"add: {pretty_name(name)}"
@@ -600,7 +746,7 @@ def action_add(username):
                        extra=["- section: " + folder_rel.replace("/", " / ")])
     branch_suffix = f"add-{slugify(folder_rel)}-{slugify(name)}"
     contribute_pipeline(username, title, body, branch_suffix)
-    write(f"{GREEN}Done â€” thanks for contributing!{RESET}")
+    write(f"{GREEN}Done - thanks for contributing!{RESET}")
 
 
 def add_external(username, folder_rel):
@@ -619,13 +765,31 @@ def add_external(username, folder_rel):
         write(f"{RED}That does not look like a single http(s) URL.{RESET}")
         return
     stub_path = CONTENT_DIR / folder_rel / STUB_NAME.format(target=target)
+    tag_id = (stub_path.parent / target).relative_to(ROOT).as_posix()
+    new_tags = None
+    if confirm("Set tags for this file?"):
+        new_tags = edit_tags(tag_id)
+        if new_tags is None:
+            return
     stub_path.parent.mkdir(parents=True, exist_ok=True)
     stub_path.write_text(url + "\n", encoding="utf-8")
+    old_overrides = read_tag_overrides()
+    if new_tags is not None:
+        updated_overrides = dict(old_overrides)
+        if new_tags:
+            updated_overrides[tag_id] = new_tags
+        else:
+            updated_overrides.pop(tag_id, None)
+        save_tag_overrides(updated_overrides)
     if not rebuild_and_check():
         stub_path.unlink(missing_ok=True)
+        save_tag_overrides(old_overrides)
+        rebuild_and_check()
         return
     if not confirm(f"Link '{target}' to {url} and submit?"):
         stub_path.unlink()
+        save_tag_overrides(old_overrides)
+        rebuild_and_check()
         write(f"{YELLOW}Cancelled; the link file was removed.{RESET}")
         return
     title = f"external: {pretty_name(target)} ({host_word(url)})"
@@ -635,11 +799,11 @@ def add_external(username, folder_rel):
     )
     branch_suffix = f"ext-{slugify(folder_rel)}-{slugify(target)}"
     contribute_pipeline(username, title, body, branch_suffix)
-    write(f"{GREEN}Done â€” thanks for contributing!{RESET}")
+    write(f"{GREEN}Done - thanks for contributing!{RESET}")
 
 
 def action_modify(username):
-    write(f"{BOLD}{ACCENT}Modify â€” replace a file with an updated version{RESET}")
+    write(f"{BOLD}{ACCENT}Modify - replace a file with an updated version{RESET}")
     node = tree_picker("file", "Pick the file to modify")
     if node is None:
         return
@@ -659,9 +823,25 @@ def action_modify(username):
         write(f"  new: {new_url}")
         if not confirm("Submit?"):
             return
+        tag_id = (abs_path.parent / node.name).relative_to(ROOT).as_posix()
+        new_tags = None
+        if confirm("Update tags too?"):
+            new_tags = edit_tags(tag_id)
+            if new_tags is None:
+                return
+        old_overrides = read_tag_overrides()
         abs_path.write_text(new_url + "\n", encoding="utf-8")
+        if new_tags is not None:
+            updated_overrides = dict(old_overrides)
+            if new_tags:
+                updated_overrides[tag_id] = new_tags
+            else:
+                updated_overrides.pop(tag_id, None)
+            save_tag_overrides(updated_overrides)
         if not rebuild_and_check():
             abs_path.write_text(old_url + "\n", encoding="utf-8")
+            save_tag_overrides(old_overrides)
+            rebuild_and_check()
             return
         title = f"link: {pretty_name(node.name)} ({host_word(new_url)})"
         body = detail_body("external", abs_path, old_size=len(old_url),
@@ -670,7 +850,7 @@ def action_modify(username):
                                   "- new link: " + new_url])
         branch_suffix = f"link-{slugify(abs_path)}"
         contribute_pipeline(username, title, body, branch_suffix)
-        write(f"{GREEN}Done â€” thanks for contributing!{RESET}")
+        write(f"{GREEN}Done - thanks for contributing!{RESET}")
         return
 
     old_size = abs_path.stat().st_size
@@ -687,19 +867,35 @@ def action_modify(username):
     write(f"  new file: {source.name}  {format_size(os.path.getsize(source))}")
     write(f"  net change: {size_delta_text(old_size, os.path.getsize(source))}")
     if source.name != node.name:
-        write(f"{YELLOW}Note: names differ â€” the renamed file will be saved as "
+        write(f"{YELLOW}Note: names differ - the renamed file will be saved as "
               f"'{node.name}'.{RESET}")
     if not confirm("Submit?"):
         return
+    tag_id = abs_path.relative_to(ROOT).as_posix()
+    new_tags = None
+    if confirm("Update tags too?"):
+        new_tags = edit_tags(tag_id)
+        if new_tags is None:
+            return
+    old_overrides = read_tag_overrides()
 
     backup = TEMP_DIR / f"bak-{node.name}"
     if backup.exists():
         backup.unlink()
     shutil.copy2(abs_path, backup)
     shutil.copy2(source, abs_path)
+    if new_tags is not None:
+        updated_overrides = dict(old_overrides)
+        if new_tags:
+            updated_overrides[tag_id] = new_tags
+        else:
+            updated_overrides.pop(tag_id, None)
+        save_tag_overrides(updated_overrides)
     if not rebuild_and_check():
         shutil.copy2(backup, abs_path)
         backup.unlink()
+        save_tag_overrides(old_overrides)
+        rebuild_and_check()
         return
     title = f"modify: {pretty_name(node.name)}"
     body = detail_body("modify", abs_path, old_size=old_size,
@@ -707,11 +903,55 @@ def action_modify(username):
                        extra=[f"- section: {abs_path.parent.relative_to(CONTENT_DIR).as_posix()}"])
     branch_suffix = f"modify-{slugify(abs_path)}"
     contribute_pipeline(username, title, body, branch_suffix)
-    write(f"{GREEN}Done â€” thanks for contributing!{RESET}")
+    write(f"{GREEN}Done - thanks for contributing!{RESET}")
+
+
+def action_update_tags(username):
+    write(f"{BOLD}{ACCENT}Update tags - choose a file{RESET}")
+    node = tree_picker("file", "Pick a file to update tags")
+    if node is None:
+        return
+    abs_path = CONTENT_DIR / node.path
+    target_path = abs_path.parent / node.name if node.is_stub else abs_path
+    tag_id = target_path.relative_to(ROOT).as_posix()
+    selected = edit_tags(tag_id)
+    if selected is None:
+        return
+
+    old_overrides = read_tag_overrides()
+    current = old_overrides.get(tag_id, [])
+    if selected == current:
+        write(f"{DIM}Tags are unchanged.{RESET}")
+        return
+    updated_overrides = dict(old_overrides)
+    if selected:
+        updated_overrides[tag_id] = selected
+    else:
+        updated_overrides.pop(tag_id, None)
+    save_tag_overrides(updated_overrides)
+    if not rebuild_and_check():
+        save_tag_overrides(old_overrides)
+        rebuild_and_check()
+        return
+    if not confirm(f"Submit tag updates for '{node.name}'?"):
+        save_tag_overrides(old_overrides)
+        rebuild_and_check()
+        write(f"{YELLOW}Tag updates cancelled.{RESET}")
+        return
+
+    title = f"tags: {pretty_name(node.name)}"
+    body = detail_body(
+        "update tags", target_path, old_size=abs_path.stat().st_size,
+        new_size=abs_path.stat().st_size,
+        extra=["- manual tags: " + (", ".join(selected) or "none")],
+    )
+    contribute_pipeline(username, title, body,
+                        f"tags-{slugify(target_path)}")
+    write(f"{GREEN}Done - thanks for contributing!{RESET}")
 
 
 def action_delete(username):
-    write(f"{BOLD}{ACCENT}Delete â€” remove a file from the index{RESET}")
+    write(f"{BOLD}{ACCENT}Delete - remove a file from the index{RESET}")
     node = tree_picker("file", "Pick the file to delete")
     if node is None:
         return
@@ -741,14 +981,26 @@ def action_delete(username):
     write(f"{RED}Do you want to delete {node.name}?{RESET}")
     if not confirm("Confirm"):
         return
-    write("You sure 0_0?")
+    write("This cannot be undone.")
     if not confirm("Type y to really delete"):
         return
+
+    target_path = abs_path.parent / node.name if node.is_stub else abs_path
+    tag_id = target_path.relative_to(ROOT).as_posix()
+    stub_path = target_path.with_name(STUB_NAME.format(target=target_path.name))
+    old_overrides = read_tag_overrides()
+    updated_overrides = dict(old_overrides)
+    if (target_path in paths or not target_path.exists()) \
+            and (stub_path in paths or not stub_path.exists()):
+        updated_overrides.pop(tag_id, None)
+    save_tag_overrides(updated_overrides)
 
     parked = [park(path) for path in paths]
     if not rebuild_and_check():
         for spot, original in zip(parked, paths):
             spot.replace(original)
+        save_tag_overrides(old_overrides)
+        rebuild_and_check()
         return
     title = f"delete: {pretty_name(node.name)}"
     body = detail_body("delete", paths[0], old_size=old_size, new_size=0,
@@ -756,45 +1008,49 @@ def action_delete(username):
     if not confirm("Submit the pull request?"):
         for spot, original in zip(parked, paths):
             spot.replace(original)
+        save_tag_overrides(old_overrides)
         rebuild_and_check()
         write(f"{YELLOW}Cancelled locally; nothing was committed.{RESET}")
         return
     branch_suffix = f"delete-{slugify(paths[0])}"
     contribute_pipeline(username, title, body, branch_suffix)
-    write(f"{GREEN}Done â€” thanks for contributing!{RESET}")
+    write(f"{GREEN}Done - thanks for contributing!{RESET}")
 
 # ------------------------------------------------------------------- main ---
 
 
 def main():
-    write(f"{BOLD}{ACCENT}ITC Index â€” contribution tool{RESET}")
+    write(f"{BOLD}{ACCENT}ITC Index - contribution tool{RESET}")
     write(f"{DIM}You will need git and the GitHub CLI; this tool checks both.{RESET}")
     write("")
     username = preflight()
     while True:
         write("")
         write(f"{BOLD}What do you want to do?{RESET}")
-        write("  1  add      â€” add a new file or external link")
-        write("  2  modify   â€” replace a file with an updated version")
-        write("  3  delete   â€” remove a file")
+        write("  1  add      - add a new file or external link")
+        write("  2  modify   - replace a file with an updated version")
+        write("  3  delete   - remove a file")
+        write("  4  tags     - update tags for a file")
         write("  q  exit")
-        choice = (input("> ").strip().lower() or "")[:6]
+        choice = (input("> ").strip().lower() or "")[:12]
         if choice in ("q", "quit", "exit", "bye"):
-            write("Bye! ^_^")
+            write("Goodbye.")
             return
         action = {"1": action_add, "add": action_add,
                   "2": action_modify, "modify": action_modify,
                   "3": action_delete, "delete": action_delete,
-                  "del": action_delete}.get(choice)
+                "del": action_delete,
+                "4": action_update_tags, "tags": action_update_tags,
+                "update-tags": action_update_tags}.get(choice)
         if action is None:
-            write(f"{DIM}Type 1, 2, 3 or q.{RESET}")
+            write(f"{DIM}Type 1, 2, 3, 4 or q.{RESET}")
             continue
         try:
             action(username)
         except (KeyboardInterrupt, EOFError):
             write()
             write("Stopped. Nothing was committed; your partial change may "
-                  "still be on disk â€” run `git status` to see.")
+                "still be on disk - run `git status` to see.")
         except RuntimeError as error:
             write(f"{RED}{error}{RESET}")
 
