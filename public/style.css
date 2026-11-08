@@ -414,7 +414,7 @@ button {
 .tag {
   padding: 1px 8px;
   border-radius: 99px;
-  background: color-mix(in srgb, var(--tag-color) 13%, white);
+  background: color-mix(in srgb, var(--tag-color) 26%, white);
   color: color-mix(in srgb, var(--tag-color) 85%, black);
   font-size: 11px;
   font-weight: 500;

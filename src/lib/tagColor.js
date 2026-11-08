@@ -17,7 +17,7 @@ function fnv1a(text) {
 export function tagColor(name) {
   const hash = fnv1a(name);
   const hue = hash % 360;
-  const saturation = 42 + ((hash >>> 8) % 14); // 42-55%
-  const lightness = 40 + ((hash >>> 16) % 8); // 40-47%
+  const saturation = 58 + ((hash >>> 8) % 25); // 58-82%
+  const lightness = 38 + ((hash >>> 16) % 17); // 38-54%
   return `hsl(${hue} ${saturation}% ${lightness}%)`;
 }
