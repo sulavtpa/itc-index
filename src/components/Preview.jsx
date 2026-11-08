@@ -1,6 +1,6 @@
 import { createEffect, createSignal, Show } from "solid-js";
 import Tags from "./Tags";
-import { externalLabel, fileBaseName, isImage } from "../lib/files";
+import { externalLabel, fileBaseName, fileExtension, formatSize, isImage } from "../lib/files";
 
 export default function Preview(props) {
   const [loaded, setLoaded] = createSignal(false);
@@ -44,16 +44,13 @@ export default function Preview(props) {
                     fallback={
                       <Show
                         when={doc().source === "external"}
-                        fallback={<p class="preview__note">This file type can’t be previewed. You can still download it.</p>}
+                        fallback={<p class="preview__note">{doc().description}</p>}
                       >
-                        <p class="preview__note">
-                          This file is hosted externally, so there is nothing to preview here.
-                          The button below opens it directly.
-                        </p>
+                        <p class="preview__note">{doc().description}</p>
                       </Show>
                     }
                   >
-                    <p class="preview__note">The image preview could not be loaded. You can still open or download the file.</p>
+                    <p class="preview__note">{doc().description}</p>
                   </Show>
                 }
               >
@@ -69,6 +66,16 @@ export default function Preview(props) {
             )}
           </Show>
         </div>
+        <Show when={props.doc()}>
+          {(doc) => (
+            <div class="preview__metadata" aria-label="File details">
+              <span>{fileExtension(doc().id).slice(1).toUpperCase() || "File"}</span>
+              <Show when={doc().size > 0}>
+                <span>{formatSize(doc().size)}</span>
+              </Show>
+            </div>
+          )}
+        </Show>
       </div>
 
       <div class="preview__foot">
