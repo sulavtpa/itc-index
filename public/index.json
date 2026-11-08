@@ -707,7 +707,8 @@
     "id": "public/content/projects/latex_template_khec_master.zip",
     "title": "Latex Template Khec Master",
     "tags": [
-      "Project"
+      "Project",
+      "Template"
     ],
     "description": "ZIP in the projects section.",
     "size": 37175,
