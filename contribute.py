@@ -893,10 +893,30 @@ def add_external(username, folder_rel):
 
 
 def action_modify(username):
-    write(f"{BOLD}{ACCENT}Modify - replace a file with an updated version{RESET}")
-    node = tree_picker("file", "Pick the file to modify")
+    write(f"{BOLD}{ACCENT}Modify - choose a file{RESET}")
+    node = tree_picker("file", "Pick a file to modify")
     if node is None:
         return
+    write(f"\nWhat do you want to modify for '{node.name}'?")
+    write("  1  replace file")
+    write("  2  tags")
+    write("  3  description")
+    write("  4  title")
+    write("  q  cancel")
+    choice = input("> ").strip().lower()
+    if choice in ("1", "file", "replace"):
+        replace_file(username, node)
+    elif choice in ("2", "tags"):
+        update_tags_for_node(username, node)
+    elif choice in ("3", "description", "desc"):
+        update_metadata_for_node(username, node, "description")
+    elif choice in ("4", "title"):
+        update_metadata_for_node(username, node, "title")
+    elif choice not in ("q", "quit", "cancel", ""):
+        write(f"{DIM}Choose 1, 2, 3, 4 or q.{RESET}")
+
+
+def replace_file(username, node):
     abs_path = CONTENT_DIR / node.path
 
     if node.is_stub:
@@ -913,32 +933,9 @@ def action_modify(username):
         write(f"  new: {new_url}")
         if not confirm("Submit?"):
             return
-        tag_id = (abs_path.parent / node.name).relative_to(ROOT).as_posix()
-        metadata = prompt_metadata(
-            tag_id, pretty_name(node.name),
-            suggested_external_description(new_url))
-        old_metadata = read_metadata_overrides()
-        new_tags = None
-        if confirm("Update tags too?"):
-            new_tags = edit_tags(tag_id)
-            if new_tags is None:
-                return
-        old_overrides = read_tag_overrides()
         abs_path.write_text(new_url + "\n", encoding="utf-8")
-        updated_metadata = dict(old_metadata)
-        updated_metadata[tag_id] = metadata
-        save_metadata_overrides(updated_metadata)
-        if new_tags is not None:
-            updated_overrides = dict(old_overrides)
-            if new_tags:
-                updated_overrides[tag_id] = new_tags
-            else:
-                updated_overrides.pop(tag_id, None)
-            save_tag_overrides(updated_overrides)
         if not rebuild_and_check():
             abs_path.write_text(old_url + "\n", encoding="utf-8")
-            save_metadata_overrides(old_metadata)
-            save_tag_overrides(old_overrides)
             rebuild_and_check()
             return
         title = f"link: {pretty_name(node.name)} ({host_word(new_url)})"
@@ -969,38 +966,14 @@ def action_modify(username):
               f"'{node.name}'.{RESET}")
     if not confirm("Submit?"):
         return
-    tag_id = abs_path.relative_to(ROOT).as_posix()
-    metadata = prompt_metadata(
-        tag_id, pretty_name(node.name),
-        suggested_description(node.name, abs_path.parent.relative_to(CONTENT_DIR).as_posix()))
-    old_metadata = read_metadata_overrides()
-    new_tags = None
-    if confirm("Update tags too?"):
-        new_tags = edit_tags(tag_id)
-        if new_tags is None:
-            return
-    old_overrides = read_tag_overrides()
-
     backup = TEMP_DIR / f"bak-{node.name}"
     if backup.exists():
         backup.unlink()
     shutil.copy2(abs_path, backup)
     shutil.copy2(source, abs_path)
-    updated_metadata = dict(old_metadata)
-    updated_metadata[tag_id] = metadata
-    save_metadata_overrides(updated_metadata)
-    if new_tags is not None:
-        updated_overrides = dict(old_overrides)
-        if new_tags:
-            updated_overrides[tag_id] = new_tags
-        else:
-            updated_overrides.pop(tag_id, None)
-        save_tag_overrides(updated_overrides)
     if not rebuild_and_check():
         shutil.copy2(backup, abs_path)
         backup.unlink()
-        save_metadata_overrides(old_metadata)
-        save_tag_overrides(old_overrides)
         rebuild_and_check()
         return
     title = f"modify: {pretty_name(node.name)}"
@@ -1017,6 +990,10 @@ def action_update_tags(username):
     node = tree_picker("file", "Pick a file to update tags")
     if node is None:
         return
+    update_tags_for_node(username, node)
+
+
+def update_tags_for_node(username, node):
     abs_path = CONTENT_DIR / node.path
     target_path = abs_path.parent / node.name if node.is_stub else abs_path
     tag_id = target_path.relative_to(ROOT).as_posix()
@@ -1053,6 +1030,55 @@ def action_update_tags(username):
     )
     contribute_pipeline(username, title, body,
                         f"tags-{slugify(target_path)}")
+    write(f"{GREEN}Done - thanks for contributing!{RESET}")
+
+
+def update_metadata_for_node(username, node, field):
+    abs_path = CONTENT_DIR / node.path
+    target_path = abs_path.parent / node.name if node.is_stub else abs_path
+    file_id = target_path.relative_to(ROOT).as_posix()
+    old_overrides = read_metadata_overrides()
+    current = {**indexed_metadata(file_id), **old_overrides.get(file_id, {})}
+    current_value = current.get(field, "")
+    if not current_value:
+        if field == "title":
+            current_value = pretty_name(node.name)
+        elif node.is_stub:
+            current_value = suggested_external_description(
+                abs_path.read_text(encoding="utf-8").strip())
+        else:
+            section = target_path.parent.relative_to(CONTENT_DIR).as_posix()
+            current_value = suggested_description(node.name, section)
+
+    write(f"Current {field}: {current_value}")
+    new_value = input(f"New {field} (Enter to keep current)\n> ").strip()
+    if not new_value or new_value == current_value:
+        write(f"{DIM}{field.title()} unchanged.{RESET}")
+        return
+
+    updated_overrides = dict(old_overrides)
+    updated_entry = dict(updated_overrides.get(file_id, {}))
+    updated_entry[field] = new_value
+    updated_overrides[file_id] = updated_entry
+    save_metadata_overrides(updated_overrides)
+    if not rebuild_and_check():
+        save_metadata_overrides(old_overrides)
+        rebuild_and_check()
+        return
+    if not confirm(f"Submit the {field} update for '{node.name}'?"):
+        save_metadata_overrides(old_overrides)
+        rebuild_and_check()
+        write(f"{YELLOW}{field.title()} update cancelled.{RESET}")
+        return
+
+    title = f"{field}: {pretty_name(node.name)}"
+    size = abs_path.stat().st_size
+    body = detail_body(
+        f"update {field}", abs_path, old_size=size, new_size=size,
+        extra=[f"- {field}: {new_value}"],
+    )
+    contribute_pipeline(username, title, body,
+                        f"{field}-{slugify(target_path)}")
     write(f"{GREEN}Done - thanks for contributing!{RESET}")
 
 
