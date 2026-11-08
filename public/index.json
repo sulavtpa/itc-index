@@ -705,12 +705,14 @@
   },
   {
     "id": "public/content/projects/latex_template_khec_master.zip",
-    "title": "Latex Template Khec Master",
+    "title": "Project Proposal Latex",
     "tags": [
       "Project",
-      "Template"
+      "Template",
+      "Proposal",
+      "Report"
     ],
-    "description": "ZIP in the projects section.",
+    "description": "The base template for Project proposal report.",
     "size": 37175,
     "ext": "zip",
     "icon": "archive",
