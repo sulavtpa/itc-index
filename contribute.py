@@ -583,10 +583,11 @@ def index_tags(file_id):
                  if doc.get("id") == file_id), [])
 
 
-def edit_tags(file_id):
+def edit_tags(file_id, initial_tags=None):
     """Edit manually assigned tags; tags derived from the file path stay intact."""
     overrides = read_tag_overrides()
-    selected = list(overrides.get(file_id, []))
+    selected = list(initial_tags if initial_tags is not None
+                    else overrides.get(file_id, []))
     all_tags = {tag.casefold(): tag for doc in json.loads(
         INDEX_FILE.read_text(encoding="utf-8")) if isinstance(doc, dict)
         for tag in doc.get("tags", []) if isinstance(tag, str)}
@@ -897,26 +898,58 @@ def action_modify(username):
     node = tree_picker("file", "Pick a file to modify")
     if node is None:
         return
-    write(f"\nWhat do you want to modify for '{node.name}'?")
-    write("  1  replace file")
-    write("  2  tags")
-    write("  3  description")
-    write("  4  title")
-    write("  q  cancel")
-    choice = input("> ").strip().lower()
-    if choice in ("1", "file", "replace"):
-        replace_file(username, node)
-    elif choice in ("2", "tags"):
-        update_tags_for_node(username, node)
-    elif choice in ("3", "description", "desc"):
-        update_metadata_for_node(username, node, "description")
-    elif choice in ("4", "title"):
-        update_metadata_for_node(username, node, "title")
-    elif choice not in ("q", "quit", "cancel", ""):
-        write(f"{DIM}Choose 1, 2, 3, 4 or q.{RESET}")
+    abs_path = CONTENT_DIR / node.path
+    target_path = abs_path.parent / node.name if node.is_stub else abs_path
+    file_id = target_path.relative_to(ROOT).as_posix()
+    pending_file = None
+    pending_tags = None
+    pending_metadata = {}
+    base_metadata = {**indexed_metadata(file_id),
+                     **read_metadata_overrides().get(file_id, {})}
+
+    while True:
+        write(f"\nChanges for '{node.name}':")
+        if pending_file:
+            write(f"  file: {pending_file['label']}")
+        if pending_tags is not None:
+            write(f"  tags: {', '.join(pending_tags) if pending_tags else '(none)'}")
+        for field, value in pending_metadata.items():
+            write(f"  {field}: {value}")
+        write("  1  modify file")
+        write("  2  tags")
+        write("  3  description")
+        write("  4  title")
+        write("  5  finish and submit")
+        write("  q  cancel all changes")
+        choice = input("> ").strip().lower()
+
+        if choice in ("1", "file", "modify file"):
+            pending_file = choose_file_update(node)
+        elif choice in ("2", "tags"):
+            initial_tags = (pending_tags if pending_tags is not None else
+                            read_tag_overrides().get(file_id, []))
+            selected = edit_tags(file_id, initial_tags)
+            if selected is not None:
+                pending_tags = selected
+        elif choice in ("3", "description", "desc"):
+            pending_metadata = prompt_modify_field(
+                "description", base_metadata, pending_metadata, node, abs_path)
+        elif choice in ("4", "title"):
+            pending_metadata = prompt_modify_field(
+                "title", base_metadata, pending_metadata, node, abs_path)
+        elif choice in ("5", "finish", "submit"):
+            break
+        elif choice in ("q", "quit", "cancel"):
+            write(f"{YELLOW}All pending changes cancelled.{RESET}")
+            return
+        else:
+            write(f"{DIM}Choose 1, 2, 3, 4, 5 or q.{RESET}")
+
+    submit_modify_changes(username, node, pending_file, pending_tags,
+                          pending_metadata)
 
 
-def replace_file(username, node):
+def choose_file_update(node):
     abs_path = CONTENT_DIR / node.path
 
     if node.is_stub:
@@ -927,119 +960,35 @@ def replace_file(username, node):
             return
         if not re.fullmatch(r"https?://\S+", new_url):
             write(f"{RED}That does not look like a single http(s) URL.{RESET}")
-            return
-        write(f"{BOLD}Do you want to update the link for {node.name}?{RESET}")
-        write(f"  old: {old_url}")
-        write(f"  new: {new_url}")
-        if not confirm("Submit?"):
-            return
-        abs_path.write_text(new_url + "\n", encoding="utf-8")
-        if not rebuild_and_check():
-            abs_path.write_text(old_url + "\n", encoding="utf-8")
-            rebuild_and_check()
-            return
-        title = f"link: {pretty_name(node.name)} ({host_word(new_url)})"
-        body = detail_body("external", abs_path, old_size=len(old_url),
-                           new_size=len(new_url),
-                           extra=["- old link: " + old_url,
-                                  "- new link: " + new_url])
-        branch_suffix = f"link-{slugify(abs_path)}"
-        contribute_pipeline(username, title, body, branch_suffix)
-        write(f"{GREEN}Done - thanks for contributing!{RESET}")
-        return
+            return None
+        if not confirm(f"Stage the new link for '{node.name}'?"):
+            return None
+        return {"kind": "url", "value": new_url, "label": "updated link"}
 
     old_size = abs_path.stat().st_size
     write(f"Old file: {node.name} ({format_size(old_size)})")
     write("Pick the updated file (a window opens now).")
     source = tkinter_pick("Choose the updated file")
     if source is None:
-        return
+        return None
     if source.resolve() == abs_path.resolve():
         write(f"{RED}That is the same file already in the repository.{RESET}")
-        return
-    write(f"{BOLD}Do you want to update it?{RESET}")
+        return None
+    write(f"{BOLD}Stage this file replacement?{RESET}")
     write(f"  old file: {node.name}  {format_size(old_size)}")
     write(f"  new file: {source.name}  {format_size(os.path.getsize(source))}")
     write(f"  net change: {size_delta_text(old_size, os.path.getsize(source))}")
     if source.name != node.name:
         write(f"{YELLOW}Note: names differ - the renamed file will be saved as "
               f"'{node.name}'.{RESET}")
-    if not confirm("Submit?"):
-        return
-    backup = TEMP_DIR / f"bak-{node.name}"
-    if backup.exists():
-        backup.unlink()
-    shutil.copy2(abs_path, backup)
-    shutil.copy2(source, abs_path)
-    if not rebuild_and_check():
-        shutil.copy2(backup, abs_path)
-        backup.unlink()
-        rebuild_and_check()
-        return
-    title = f"modify: {pretty_name(node.name)}"
-    body = detail_body("modify", abs_path, old_size=old_size,
-                       new_size=abs_path.stat().st_size,
-                       extra=[f"- section: {abs_path.parent.relative_to(CONTENT_DIR).as_posix()}"])
-    branch_suffix = f"modify-{slugify(abs_path)}"
-    contribute_pipeline(username, title, body, branch_suffix)
-    write(f"{GREEN}Done - thanks for contributing!{RESET}")
+    if not confirm("Use this updated file?"):
+        return None
+    return {"kind": "file", "value": source,
+            "label": f"{source.name} ({format_size(source.stat().st_size)})"}
 
 
-def action_update_tags(username):
-    write(f"{BOLD}{ACCENT}Update tags - choose a file{RESET}")
-    node = tree_picker("file", "Pick a file to update tags")
-    if node is None:
-        return
-    update_tags_for_node(username, node)
-
-
-def update_tags_for_node(username, node):
-    abs_path = CONTENT_DIR / node.path
-    target_path = abs_path.parent / node.name if node.is_stub else abs_path
-    tag_id = target_path.relative_to(ROOT).as_posix()
-    selected = edit_tags(tag_id)
-    if selected is None:
-        return
-
-    old_overrides = read_tag_overrides()
-    current = old_overrides.get(tag_id, [])
-    if selected == current:
-        write(f"{DIM}Tags are unchanged.{RESET}")
-        return
-    updated_overrides = dict(old_overrides)
-    if selected:
-        updated_overrides[tag_id] = selected
-    else:
-        updated_overrides.pop(tag_id, None)
-    save_tag_overrides(updated_overrides)
-    if not rebuild_and_check():
-        save_tag_overrides(old_overrides)
-        rebuild_and_check()
-        return
-    if not confirm(f"Submit tag updates for '{node.name}'?"):
-        save_tag_overrides(old_overrides)
-        rebuild_and_check()
-        write(f"{YELLOW}Tag updates cancelled.{RESET}")
-        return
-
-    title = f"tags: {pretty_name(node.name)}"
-    body = detail_body(
-        "update tags", target_path, old_size=abs_path.stat().st_size,
-        new_size=abs_path.stat().st_size,
-        extra=["- manual tags: " + (", ".join(selected) or "none")],
-    )
-    contribute_pipeline(username, title, body,
-                        f"tags-{slugify(target_path)}")
-    write(f"{GREEN}Done - thanks for contributing!{RESET}")
-
-
-def update_metadata_for_node(username, node, field):
-    abs_path = CONTENT_DIR / node.path
-    target_path = abs_path.parent / node.name if node.is_stub else abs_path
-    file_id = target_path.relative_to(ROOT).as_posix()
-    old_overrides = read_metadata_overrides()
-    current = {**indexed_metadata(file_id), **old_overrides.get(file_id, {})}
-    current_value = current.get(field, "")
+def prompt_modify_field(field, base_metadata, pending_metadata, node, abs_path):
+    current_value = pending_metadata.get(field) or base_metadata.get(field, "")
     if not current_value:
         if field == "title":
             current_value = pretty_name(node.name)
@@ -1047,38 +996,110 @@ def update_metadata_for_node(username, node, field):
             current_value = suggested_external_description(
                 abs_path.read_text(encoding="utf-8").strip())
         else:
-            section = target_path.parent.relative_to(CONTENT_DIR).as_posix()
+            section = abs_path.parent.relative_to(CONTENT_DIR).as_posix()
             current_value = suggested_description(node.name, section)
-
     write(f"Current {field}: {current_value}")
     new_value = input(f"New {field} (Enter to keep current)\n> ").strip()
-    if not new_value or new_value == current_value:
-        write(f"{DIM}{field.title()} unchanged.{RESET}")
+    if not new_value or new_value == base_metadata.get(field, current_value):
+        pending_metadata.pop(field, None)
+    else:
+        pending_metadata[field] = new_value
+    return pending_metadata
+
+
+def submit_modify_changes(username, node, pending_file, pending_tags,
+                          pending_metadata):
+    abs_path = CONTENT_DIR / node.path
+    target_path = abs_path.parent / node.name if node.is_stub else abs_path
+    file_id = target_path.relative_to(ROOT).as_posix()
+    old_tags = read_tag_overrides()
+    old_metadata = read_metadata_overrides()
+    current_metadata = {**indexed_metadata(file_id),
+                        **old_metadata.get(file_id, {})}
+    changed_metadata = {
+        field: value for field, value in pending_metadata.items()
+        if current_metadata.get(field) != value
+    }
+    tags_changed = (pending_tags is not None
+                    and pending_tags != old_tags.get(file_id, []))
+    if pending_file is None and not changed_metadata and not tags_changed:
+        write(f"{DIM}No changes to submit.{RESET}")
         return
 
-    updated_overrides = dict(old_overrides)
-    updated_entry = dict(updated_overrides.get(file_id, {}))
-    updated_entry[field] = new_value
-    updated_overrides[file_id] = updated_entry
-    save_metadata_overrides(updated_overrides)
+    old_size = (len(abs_path.read_text(encoding="utf-8").strip())
+                if node.is_stub else abs_path.stat().st_size)
+    old_url = abs_path.read_text(encoding="utf-8").strip() if node.is_stub else None
+    backup = None
+    if pending_file and pending_file["kind"] == "file":
+        backup = TEMP_DIR / f"bak-{node.name}"
+        shutil.copy2(abs_path, backup)
+
+    def restore():
+        if pending_file:
+            if pending_file["kind"] == "url":
+                abs_path.write_text(old_url + "\n", encoding="utf-8")
+            elif backup and backup.exists():
+                shutil.copy2(backup, abs_path)
+                backup.unlink()
+        save_tag_overrides(old_tags)
+        save_metadata_overrides(old_metadata)
+
+    try:
+        if pending_file:
+            if pending_file["kind"] == "url":
+                abs_path.write_text(pending_file["value"] + "\n", encoding="utf-8")
+            else:
+                shutil.copy2(pending_file["value"], abs_path)
+        if tags_changed:
+            updated_tags = dict(old_tags)
+            if pending_tags:
+                updated_tags[file_id] = pending_tags
+            else:
+                updated_tags.pop(file_id, None)
+            save_tag_overrides(updated_tags)
+        if changed_metadata:
+            updated_metadata = dict(old_metadata)
+            entry = dict(updated_metadata.get(file_id, {}))
+            entry.update(changed_metadata)
+            updated_metadata[file_id] = entry
+            save_metadata_overrides(updated_metadata)
+    except OSError:
+        restore()
+        raise
+
     if not rebuild_and_check():
-        save_metadata_overrides(old_overrides)
+        restore()
         rebuild_and_check()
         return
-    if not confirm(f"Submit the {field} update for '{node.name}'?"):
-        save_metadata_overrides(old_overrides)
+    if not confirm("Submit all these changes in one pull request?"):
+        restore()
         rebuild_and_check()
-        write(f"{YELLOW}{field.title()} update cancelled.{RESET}")
+        write(f"{YELLOW}All changes cancelled.{RESET}")
         return
 
-    title = f"{field}: {pretty_name(node.name)}"
-    size = abs_path.stat().st_size
-    body = detail_body(
-        f"update {field}", abs_path, old_size=size, new_size=size,
-        extra=[f"- {field}: {new_value}"],
-    )
+    if pending_file and pending_file["kind"] == "url":
+        new_size = len(pending_file["value"])
+    elif pending_file:
+        new_size = abs_path.stat().st_size
+    else:
+        new_size = old_size
+    extras = []
+    if pending_file and pending_file["kind"] == "url":
+        extras.extend(["- old link: " + old_url,
+                       "- new link: " + pending_file["value"]])
+    if tags_changed:
+        extras.append("- manual tags: " + (", ".join(pending_tags) or "none"))
+    extras.extend(f"- {field}: {value}" for field, value in changed_metadata.items())
+    if not node.is_stub:
+        extras.append("- section: " + abs_path.parent.relative_to(CONTENT_DIR).as_posix())
+
+    action = "modify" if pending_file else "update metadata"
+    title = f"modify: {pretty_name(node.name)}" if pending_file else \
+        f"update: {pretty_name(node.name)}"
+    body = detail_body(action, abs_path, old_size=old_size,
+                       new_size=new_size, extra=extras)
     contribute_pipeline(username, title, body,
-                        f"{field}-{slugify(target_path)}")
+                        f"modify-{slugify(target_path)}")
     write(f"{GREEN}Done - thanks for contributing!{RESET}")
 
 
@@ -1166,9 +1187,8 @@ def main():
         write("")
         write(f"{BOLD}What do you want to do?{RESET}")
         write("  1  add      - add a new file or external link")
-        write("  2  modify   - replace a file with an updated version")
+        write("  2  modify   - update file, tags, title or description")
         write("  3  delete   - remove a file")
-        write("  4  tags     - update tags for a file")
         write("  q  exit")
         choice = (input("> ").strip().lower() or "")[:12]
         if choice in ("q", "quit", "exit", "bye"):
@@ -1177,11 +1197,9 @@ def main():
         action = {"1": action_add, "add": action_add,
                   "2": action_modify, "modify": action_modify,
                   "3": action_delete, "delete": action_delete,
-                "del": action_delete,
-                "4": action_update_tags, "tags": action_update_tags,
-                "update-tags": action_update_tags}.get(choice)
+                  "del": action_delete}.get(choice)
         if action is None:
-            write(f"{DIM}Type 1, 2, 3, 4 or q.{RESET}")
+            write(f"{DIM}Type 1, 2, 3 or q.{RESET}")
             continue
         try:
             action(username)
