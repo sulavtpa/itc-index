@@ -3,11 +3,13 @@ import Tags from "./Tags";
 import { externalLabel, fileBaseName, isImage } from "../lib/files";
 
 export default function Preview(props) {
+  const [loaded, setLoaded] = createSignal(false);
   const [failed, setFailed] = createSignal(false);
 
   // Reset the image-load state whenever a new file is previewed.
   createEffect(() => {
     props.doc()?.id;
+    setLoaded(false);
     setFailed(false);
   });
 
@@ -35,23 +37,31 @@ export default function Preview(props) {
           <Show when={props.doc()}>
             {(doc) => (
               <Show
-                when={isImage(doc())}
+                when={isImage(doc()) && !failed()}
                 fallback={
                   <Show
-                    when={doc().source === "external"}
-                    fallback={<p class="preview__note">This file type can’t be previewed. You can still download it.</p>}
+                    when={failed()}
+                    fallback={
+                      <Show
+                        when={doc().source === "external"}
+                        fallback={<p class="preview__note">This file type can’t be previewed. You can still download it.</p>}
+                      >
+                        <p class="preview__note">
+                          This file is hosted externally, so there is nothing to preview here.
+                          The button below opens it directly.
+                        </p>
+                      </Show>
+                    }
                   >
-                    <p class="preview__note">
-                      This file is hosted externally, so there is nothing to preview here.
-                      The button below opens it directly.
-                    </p>
+                    <p class="preview__note">The image preview could not be loaded. You can still open or download the file.</p>
                   </Show>
                 }
               >
                 <a href={encodeURI(doc().id)} target="_blank" rel="noopener noreferrer"
                   aria-label={`Open ${doc().title} full size`}>
-                  <img alt={doc().title} decoding="async" loading="lazy"
+                  <img alt={doc().title} classList={{ loaded: loaded() }} decoding="async" loading="lazy"
                     src={encodeURI(doc().id)}
+                    onLoad={() => setLoaded(true)}
                     onError={() => setFailed(true)}
                   />
                 </a>

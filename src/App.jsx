@@ -18,12 +18,26 @@ const SECTIONS = [
 const SECTION_LABELS = Object.fromEntries(SECTIONS.map((s) => [s.root, s.label]));
 
 export default function App() {
-  const [docs, { refetch }] = createResource(() =>
-    fetch("/index.json", { headers: { Accept: "application/json" } })
-      .then((response) => {
-        if (!response.ok) throw new Error(`index.json: HTTP ${response.status}`);
-        return response.json();
-      }));
+  const [data, { refetch }] = createResource(async () => {
+    const [indexResponse, suggestedResponse] = await Promise.all([
+      fetch("/index.json", { headers: { Accept: "application/json" } }),
+      fetch("/suggested.json", { headers: { Accept: "application/json" } }),
+    ]);
+    if (!indexResponse.ok) throw new Error(`index.json: HTTP ${indexResponse.status}`);
+    if (!suggestedResponse.ok) {
+      throw new Error(`suggested.json: HTTP ${suggestedResponse.status}`);
+    }
+    const [documents, suggestedIds] = await Promise.all([
+      indexResponse.json(),
+      suggestedResponse.json(),
+    ]);
+    return { documents, suggestedIds };
+  });
+  const docs = () => data()?.documents;
+  const suggestions = createMemo(() => {
+    const byId = new Map((docs() ?? []).map((doc) => [doc.id, doc]));
+    return (data()?.suggestedIds ?? []).map((id) => byId.get(id)).filter(Boolean);
+  });
 
   const [query, setQuery] = createSignal(
     new URLSearchParams(window.location.search).get("q") ?? "");
@@ -45,7 +59,7 @@ export default function App() {
 
   const results = createMemo(() => (query().trim()
     ? search(query(), sectionDocs())
-    : sectionDocs()));
+    : section() === "all" ? suggestions().slice(0, 10) : sectionDocs()));
 
   const titleText = () => {
     if (!docs()) return "Loading…";
@@ -53,6 +67,7 @@ export default function App() {
       const count = results().length;
       return `${count} ${count === 1 ? "result" : "results"}`;
     }
+    if (section() === "all") return "Suggested files";
     const count = sectionDocs().length;
     return `${SECTION_LABELS[section()]} · ${count} ${count === 1 ? "file" : "files"}`;
   };
@@ -142,7 +157,7 @@ export default function App() {
           </button>
         </form>
 
-        <Show when={docs.error} fallback={null}>
+        <Show when={data.error} fallback={null}>
           <div class="results__list" style={{ "margin-top": "28px" }}>
             <p class="empty">
               The file list could not be loaded. Check your connection and try again.
@@ -151,8 +166,8 @@ export default function App() {
             </p>
           </div>
         </Show>
-        <Show when={!docs.error && docs()} fallback={
-          <Show when={!docs.error}>
+        <Show when={!data.error && docs()} fallback={
+          <Show when={!data.error}>
             <div class="results__list" style={{ "margin-top": "28px" }}>
               <p class="empty">Loading files…</p>
             </div>
@@ -175,6 +190,12 @@ export default function App() {
                 selected={selected}
                 onSelect={(doc, element) => pick(doc, element)}
               />
+              <Show when={!query().trim() && section() === "all"
+                && results().length < sectionDocs().length}>
+                <p class="results__more">
+                  +{sectionDocs().length - results().length} more files. Search to find something specific.
+                </p>
+              </Show>
             </section>
 
             <Preview doc={selected} onClose={closePreview} />

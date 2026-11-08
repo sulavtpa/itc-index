@@ -80,7 +80,7 @@ button {
 
 .masthead {
   width: min(1080px, 100%);
-  margin: 0 auto 40px;
+  margin: 0 auto 12px;
 }
 
 .brand {
@@ -318,6 +318,12 @@ button {
   padding: 20px 0;
   color: var(--muted);
   font-size: 14px;
+}
+
+.results__more {
+  padding: 14px 0;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .empty .button {
@@ -573,7 +579,7 @@ button {
 
 @media (max-width: 860px) {
   .masthead {
-    margin-bottom: 28px;
+    margin-bottom: 12px;
   }
 
   .layout {
