@@ -702,5 +702,18 @@
     "icon": "image",
     "section": "courses",
     "source": "repo"
+  },
+  {
+    "id": "public/content/projects/latex_template_khec_master.zip",
+    "title": "Latex Template Khec Master",
+    "tags": [
+      "Project"
+    ],
+    "description": "ZIP in the projects section.",
+    "size": 37175,
+    "ext": "zip",
+    "icon": "archive",
+    "section": "projects",
+    "source": "repo"
   }
 ]
