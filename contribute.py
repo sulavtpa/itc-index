@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parent
 CONTENT_DIR = ROOT / "public" / "content"
 INDEX_FILE = ROOT / "public" / "index.json"
 TAG_OVERRIDES_FILE = ROOT / "public" / "tag-overrides.json"
+METADATA_OVERRIDES_FILE = ROOT / "public" / "metadata-overrides.json"
 STUB_PREFIX = "(external)-"
 STUB_SUFFIX = ".txt"
 STUB_NAME = STUB_PREFIX + "{target}" + STUB_SUFFIX
@@ -398,6 +399,12 @@ def contribute_pipeline(username, title, body, branch_suffix):
     )
     if TAG_OVERRIDES_FILE.exists() or tracked_tags.returncode == 0:
         stage_paths.append("public/tag-overrides.json")
+    tracked_metadata = run(
+        ["git", "ls-files", "--error-unmatch", "public/metadata-overrides.json"],
+        check=False,
+    )
+    if METADATA_OVERRIDES_FILE.exists() or tracked_metadata.returncode == 0:
+        stage_paths.append("public/metadata-overrides.json")
     git(["add", "-A", *stage_paths])
     clean = run(["git", "diff", "--cached", "--quiet"], check=False)
     if clean.returncode == 0:
@@ -509,6 +516,61 @@ def save_tag_overrides(overrides):
         json.dumps(overrides, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+
+def read_metadata_overrides():
+    if not METADATA_OVERRIDES_FILE.exists():
+        return {}
+    try:
+        with METADATA_OVERRIDES_FILE.open(encoding="utf-8") as file:
+            overrides = json.load(file)
+    except (OSError, json.JSONDecodeError) as error:
+        raise RuntimeError(f"Could not read metadata overrides: {error}") from error
+    if not isinstance(overrides, dict):
+        raise RuntimeError("public/metadata-overrides.json must contain an object.")
+    for file_id, metadata in overrides.items():
+        if not isinstance(file_id, str) or not isinstance(metadata, dict) \
+                or any(key not in ("title", "description")
+                       or not isinstance(value, str) or not value.strip()
+                       for key, value in metadata.items()):
+            raise RuntimeError(
+                "Metadata overrides must map file IDs to non-empty titles or descriptions."
+            )
+    return overrides
+
+
+def save_metadata_overrides(overrides):
+    if not overrides:
+        METADATA_OVERRIDES_FILE.unlink(missing_ok=True)
+        return
+    METADATA_OVERRIDES_FILE.write_text(
+        json.dumps(overrides, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def indexed_metadata(file_id):
+    try:
+        with INDEX_FILE.open(encoding="utf-8") as file:
+            documents = json.load(file)
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return next(({"title": doc.get("title", ""),
+                  "description": doc.get("description", "")}
+                 for doc in documents if doc.get("id") == file_id), {})
+
+
+def prompt_metadata(file_id, suggested_title, suggested_description):
+    """Ask for index text, using prior values or generated suggestions as defaults."""
+    overrides = read_metadata_overrides()
+    current = {**indexed_metadata(file_id), **overrides.get(file_id, {})}
+    title_default = current.get("title") or suggested_title
+    description_default = current.get("description") or suggested_description
+    write(f"\nTitle [{title_default}]")
+    title = input("> ").strip() or title_default
+    write(f"Description [{description_default}]")
+    description = input("> ").strip() or description_default
+    return {"title": title, "description": description}
 
 
 def index_tags(file_id):
@@ -674,6 +736,19 @@ def host_word(url):
     return "an external host"
 
 
+def suggested_description(filename, folder_rel):
+    extension = Path(filename).suffix.lstrip(".").upper() or "File"
+    section = Path(folder_rel).parts[0].replace("-", " ") if folder_rel else "content"
+    return f"{extension} file in the {section} section."
+
+
+def suggested_external_description(url):
+    host = {"MEGA": "mega", "Google Drive": "drive", "Dropbox": "dropbox"}.get(
+        host_word(url))
+    return (f"Hosted on {host}, not in the repository." if host else
+            "Hosted externally, not in the repository.")
+
+
 def action_add(username):
     write(f"{BOLD}{ACCENT}Add - choose where the file belongs{RESET}")
     folder_node = tree_picker("dir", "Pick the destination folder")
@@ -716,12 +791,18 @@ def action_add(username):
             add_external(username, folder_rel)
             return
     tag_id = destination.relative_to(ROOT).as_posix()
+    metadata = prompt_metadata(
+        tag_id, pretty_name(name), suggested_description(name, folder_rel))
+    old_metadata = read_metadata_overrides()
     new_tags = None
     if confirm("Set tags for this file?"):
         new_tags = edit_tags(tag_id)
         if new_tags is None:
             return
     shutil.copy2(source, destination)
+    updated_metadata = dict(old_metadata)
+    updated_metadata[tag_id] = metadata
+    save_metadata_overrides(updated_metadata)
     old_overrides = read_tag_overrides()
     if new_tags is not None:
         updated_overrides = dict(old_overrides)
@@ -736,6 +817,7 @@ def action_add(username):
           f"({format_size(destination.stat().st_size)})")
     if not confirm(f"Add '{name}' and submit the pull request?"):
         destination.unlink()
+        save_metadata_overrides(old_metadata)
         save_tag_overrides(old_overrides)
         rebuild_and_check()
         write(f"{YELLOW}Cancelled; the copied file was removed.{RESET}")
@@ -766,6 +848,9 @@ def add_external(username, folder_rel):
         return
     stub_path = CONTENT_DIR / folder_rel / STUB_NAME.format(target=target)
     tag_id = (stub_path.parent / target).relative_to(ROOT).as_posix()
+    metadata = prompt_metadata(
+        tag_id, pretty_name(target), suggested_external_description(url))
+    old_metadata = read_metadata_overrides()
     new_tags = None
     if confirm("Set tags for this file?"):
         new_tags = edit_tags(tag_id)
@@ -773,6 +858,9 @@ def add_external(username, folder_rel):
             return
     stub_path.parent.mkdir(parents=True, exist_ok=True)
     stub_path.write_text(url + "\n", encoding="utf-8")
+    updated_metadata = dict(old_metadata)
+    updated_metadata[tag_id] = metadata
+    save_metadata_overrides(updated_metadata)
     old_overrides = read_tag_overrides()
     if new_tags is not None:
         updated_overrides = dict(old_overrides)
@@ -783,11 +871,13 @@ def add_external(username, folder_rel):
         save_tag_overrides(updated_overrides)
     if not rebuild_and_check():
         stub_path.unlink(missing_ok=True)
+        save_metadata_overrides(old_metadata)
         save_tag_overrides(old_overrides)
         rebuild_and_check()
         return
     if not confirm(f"Link '{target}' to {url} and submit?"):
         stub_path.unlink()
+        save_metadata_overrides(old_metadata)
         save_tag_overrides(old_overrides)
         rebuild_and_check()
         write(f"{YELLOW}Cancelled; the link file was removed.{RESET}")
@@ -824,6 +914,10 @@ def action_modify(username):
         if not confirm("Submit?"):
             return
         tag_id = (abs_path.parent / node.name).relative_to(ROOT).as_posix()
+        metadata = prompt_metadata(
+            tag_id, pretty_name(node.name),
+            suggested_external_description(new_url))
+        old_metadata = read_metadata_overrides()
         new_tags = None
         if confirm("Update tags too?"):
             new_tags = edit_tags(tag_id)
@@ -831,6 +925,9 @@ def action_modify(username):
                 return
         old_overrides = read_tag_overrides()
         abs_path.write_text(new_url + "\n", encoding="utf-8")
+        updated_metadata = dict(old_metadata)
+        updated_metadata[tag_id] = metadata
+        save_metadata_overrides(updated_metadata)
         if new_tags is not None:
             updated_overrides = dict(old_overrides)
             if new_tags:
@@ -840,6 +937,7 @@ def action_modify(username):
             save_tag_overrides(updated_overrides)
         if not rebuild_and_check():
             abs_path.write_text(old_url + "\n", encoding="utf-8")
+            save_metadata_overrides(old_metadata)
             save_tag_overrides(old_overrides)
             rebuild_and_check()
             return
@@ -872,6 +970,10 @@ def action_modify(username):
     if not confirm("Submit?"):
         return
     tag_id = abs_path.relative_to(ROOT).as_posix()
+    metadata = prompt_metadata(
+        tag_id, pretty_name(node.name),
+        suggested_description(node.name, abs_path.parent.relative_to(CONTENT_DIR).as_posix()))
+    old_metadata = read_metadata_overrides()
     new_tags = None
     if confirm("Update tags too?"):
         new_tags = edit_tags(tag_id)
@@ -884,6 +986,9 @@ def action_modify(username):
         backup.unlink()
     shutil.copy2(abs_path, backup)
     shutil.copy2(source, abs_path)
+    updated_metadata = dict(old_metadata)
+    updated_metadata[tag_id] = metadata
+    save_metadata_overrides(updated_metadata)
     if new_tags is not None:
         updated_overrides = dict(old_overrides)
         if new_tags:
@@ -894,6 +999,7 @@ def action_modify(username):
     if not rebuild_and_check():
         shutil.copy2(backup, abs_path)
         backup.unlink()
+        save_metadata_overrides(old_metadata)
         save_tag_overrides(old_overrides)
         rebuild_and_check()
         return
@@ -990,16 +1096,21 @@ def action_delete(username):
     stub_path = target_path.with_name(STUB_NAME.format(target=target_path.name))
     old_overrides = read_tag_overrides()
     updated_overrides = dict(old_overrides)
+    old_metadata = read_metadata_overrides()
+    updated_metadata = dict(old_metadata)
     if (target_path in paths or not target_path.exists()) \
             and (stub_path in paths or not stub_path.exists()):
         updated_overrides.pop(tag_id, None)
+        updated_metadata.pop(tag_id, None)
     save_tag_overrides(updated_overrides)
+    save_metadata_overrides(updated_metadata)
 
     parked = [park(path) for path in paths]
     if not rebuild_and_check():
         for spot, original in zip(parked, paths):
             spot.replace(original)
         save_tag_overrides(old_overrides)
+        save_metadata_overrides(old_metadata)
         rebuild_and_check()
         return
     title = f"delete: {pretty_name(node.name)}"
@@ -1009,6 +1120,7 @@ def action_delete(username):
         for spot, original in zip(parked, paths):
             spot.replace(original)
         save_tag_overrides(old_overrides)
+        save_metadata_overrides(old_metadata)
         rebuild_and_check()
         write(f"{YELLOW}Cancelled locally; nothing was committed.{RESET}")
         return

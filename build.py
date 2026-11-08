@@ -18,6 +18,7 @@ CONTENT_DIR = ROOT / "public" / "content"
 COURSE_DATA = ROOT / "course.json"
 INDEX_FILE = ROOT / "public" / "index.json"
 TAG_OVERRIDES_FILE = ROOT / "public" / "tag-overrides.json"
+METADATA_OVERRIDES_FILE = ROOT / "public" / "metadata-overrides.json"
 
 STUB_PREFIX = "(external)-"
 STUB_SUFFIX = ".txt"
@@ -94,6 +95,24 @@ def read_tag_overrides():
         if not isinstance(file_id, str) or not isinstance(tags, list) \
                 or any(not isinstance(tag, str) or not tag.strip() for tag in tags):
             raise ValueError("Tag overrides must map file IDs to non-empty tag lists")
+    return overrides
+
+
+def read_metadata_overrides():
+    if not METADATA_OVERRIDES_FILE.exists():
+        return {}
+    with METADATA_OVERRIDES_FILE.open(encoding="utf-8") as file:
+        overrides = json.load(file)
+    if not isinstance(overrides, dict):
+        raise ValueError("public/metadata-overrides.json must contain an object")
+    for file_id, metadata in overrides.items():
+        if not isinstance(file_id, str) or not isinstance(metadata, dict) \
+                or any(key not in ("title", "description")
+                       or not isinstance(value, str) or not value.strip()
+                       for key, value in metadata.items()):
+            raise ValueError(
+                "Metadata overrides must map file IDs to non-empty titles or descriptions"
+            )
     return overrides
 
 
@@ -234,6 +253,7 @@ def describe_parts(part_path, *, name, stub_url=None, dept_by_folder, names_by_s
 
 def build():
     tag_overrides = read_tag_overrides()
+    metadata_overrides = read_metadata_overrides()
     dept_by_folder = {}
     names_by_short = {}
     departments = read_course_data()
@@ -307,6 +327,7 @@ def build():
 
     for doc in documents:
         doc["tags"] = dedupe([*doc["tags"], *tag_overrides.get(doc["id"], [])])
+        doc.update(metadata_overrides.get(doc["id"], {}))
     documents.sort(key=lambda d: d["id"])
     INDEX_FILE.write_text(
         json.dumps(documents, ensure_ascii=False, indent=2) + "\n",
