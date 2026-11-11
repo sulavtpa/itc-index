@@ -113,7 +113,7 @@ def initial_checks():
         sys.exit(1)
     username = match.group(1)
 
-    print(f"Signed in as\n{username}\n({name}\n<{email}>)")
+    print(f"Signed in as\n{username}\n({commandoutput_name}\n<{commandoutput_email}>)")
     return username
 
 initial_checks()
