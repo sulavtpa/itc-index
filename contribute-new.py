@@ -68,7 +68,7 @@ def gh(command):
 
 # Initial Checks to make sure computer has everything setup correctly
 def initial_checks():
-    
+
     # Clear the screen first
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -100,3 +100,20 @@ def initial_checks():
         print("You are not logged in to GitHub. Run this once:")
         print("    gh auth login")
         sys.exit(1)
+
+    # Check for the current working tree
+    if run(["git", "status", "--porcelain"]).stdout.strip():
+        print("This repo has uncommitted changes. Run 'git status' to see them.")
+        sys.exit(1)
+
+    # pull the username out of the gh output
+    match = re.search(r"account ([^\s(]+)", output)
+    if not match:
+        print("Could not read your GitHub username. Try 'gh auth login' again.")
+        sys.exit(1)
+    username = match.group(1)
+
+    print(f"Signed in as\n{username}\n({name}\n<{email}>)")
+    return username
+
+initial_checks()
