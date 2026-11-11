@@ -68,18 +68,22 @@ def gh(command):
 
 # Initial Checks to make sure computer has everything setup correctly
 def initial_checks():
+    
     # Clear the screen first
     os.system('cls' if os.name == 'nt' else 'clear')
+
     # Check for git
     commandoutput = run(["git", "--version"])
     if commandoutput.returncode != 0:
         print("\n\ngit is not installed or not working properly!\n\n")
         sys.exit(1)
+
     # Check for gh
     commandoutput= run(["gh", "--version"])
     if commandoutput.returncode != 0:
         print("GitHub CLI is not installed, download link: https://cli.github.com")
         sys.exit(1)
+
     # Check if the user has email, username setup on git
     commandoutput_name  = run(["git", "config", "user.name"]).stdout.strip()
     commandoutput_email = run(["git", "config", "user.email"]).stdout.strip()
@@ -88,6 +92,7 @@ def initial_checks():
         print('    git config --global user.name  "Your Name"')
         print('    git config --global user.email "you@example.com"')
         sys.exit(1)
+
     # Github CLI logged in?
     auth = run(["gh", "auth", "status"])
     output = auth.stdout + auth.stderr
