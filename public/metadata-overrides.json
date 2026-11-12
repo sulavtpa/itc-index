@@ -2,5 +2,9 @@
   "public/content/projects/latex_template_khec_master.zip": {
     "description": "The base template for Project proposal report.",
     "title": "Project Proposal Latex"
+  },
+  "public/content/past-questions/computer/B.E. Computer 5th Sem Question Bank.pdf": {
+    "title": "Question Bank 5th Sem (Old)",
+    "description": "This file contains the question paper of 5th Semester Computer."
   }
 }
