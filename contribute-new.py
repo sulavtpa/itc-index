@@ -18,6 +18,7 @@ from pathlib import Path
 
 try:
     import questionary
+    
 except ImportError:
     print ("\n\nYou must install questionary this program to work!\nPlease run: python -m pip install questionary\n\n")
     sys.exit(1)
